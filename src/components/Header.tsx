@@ -63,6 +63,11 @@ const Header = () => {
 
           {/* Icons */}
           <div className="flex items-center gap-4">
+            {isAdmin && (
+              <Link to="/admin" className={`p-2 transition-colors hover:text-accent ${textColor}`}>
+                <Settings className="w-5 h-5" />
+              </Link>
+            )}
             <button className={`p-2 transition-colors hover:text-accent ${textColor}`}>
               <User className="w-5 h-5" />
             </button>
