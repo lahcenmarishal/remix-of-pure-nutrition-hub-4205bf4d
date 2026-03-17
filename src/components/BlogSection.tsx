@@ -33,20 +33,22 @@ const BlogSection = () => {
         </AnimatedSection>
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {items.map((post: any, i: number) => (
-            <StaggerItem key={i}>
-              <article className="group bg-card rounded-xl overflow-hidden border border-border hover:shadow-lg transition-shadow h-full">
-                <div className="aspect-video overflow-hidden">
-                  <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                </div>
-                <div className="p-6">
-                  <p className="text-xs text-muted-foreground mb-2">{post.date}</p>
-                  <h3 className="font-display text-lg font-semibold text-card-foreground mb-2 group-hover:text-primary transition-colors">{post.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{post.excerpt}</p>
-                  <Link to="/blog" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-accent transition-colors">
-                    Lire la suite <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              </article>
+            <StaggerItem key={post.id || i}>
+              <Link to={`/blog/${post.slug}`} className="group block h-full">
+                <article className="bg-card rounded-xl overflow-hidden border border-border hover:shadow-lg transition-shadow h-full">
+                  <div className="aspect-video overflow-hidden">
+                    <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                  </div>
+                  <div className="p-6">
+                    <p className="text-xs text-muted-foreground mb-2">{post.date}</p>
+                    <h3 className="font-display text-lg font-semibold text-card-foreground mb-2 group-hover:text-primary transition-colors">{post.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{post.excerpt}</p>
+                    <span className="inline-flex items-center gap-1 text-sm font-medium text-primary group-hover:text-accent transition-colors">
+                      Lire la suite <ArrowRight className="w-4 h-4" />
+                    </span>
+                  </div>
+                </article>
+              </Link>
             </StaggerItem>
           ))}
         </StaggerContainer>
