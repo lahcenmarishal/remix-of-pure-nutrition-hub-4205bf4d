@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { products, categories } from "@/lib/products";
+import { useProducts, useCategories } from "@/hooks/useProducts";
 import { ProductCard } from "@/components/FeaturedProducts";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const ShopPage = () => {
   const [activeCategory, setActiveCategory] = useState("all");
+  const { data: products = [], isLoading } = useProducts();
+  const { data: categories = [] } = useCategories();
 
   const filtered = activeCategory === "all" ? products : products.filter((p) => p.category === activeCategory);
 
@@ -21,9 +23,8 @@ const ShopPage = () => {
             </p>
           </div>
 
-          {/* Filters */}
           <div className="flex flex-wrap justify-center gap-3 mb-12">
-            {categories.map((cat) => (
+            {categories.map((cat: any) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
@@ -38,12 +39,15 @@ const ShopPage = () => {
             ))}
           </div>
 
-          {/* Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="text-center py-20"><p className="text-muted-foreground">Chargement...</p></div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filtered.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          )}
         </div>
       </main>
       <Footer />

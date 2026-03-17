@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingCart, User, Menu, X } from "lucide-react";
+import { ShoppingCart, User, Menu, X, Settings } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/hooks/useAuth";
 import logo from "@/assets/nutritrax-logo.png";
 
 const Header = () => {
@@ -10,6 +11,7 @@ const Header = () => {
   const location = useLocation();
   const isHome = location.pathname === "/";
   const { totalItems, openDrawer } = useCart();
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -61,6 +63,11 @@ const Header = () => {
 
           {/* Icons */}
           <div className="flex items-center gap-4">
+            {isAdmin && (
+              <Link to="/admin" className={`p-2 transition-colors hover:text-accent ${textColor}`}>
+                <Settings className="w-5 h-5" />
+              </Link>
+            )}
             <button className={`p-2 transition-colors hover:text-accent ${textColor}`}>
               <User className="w-5 h-5" />
             </button>
