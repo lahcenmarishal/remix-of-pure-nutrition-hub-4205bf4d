@@ -1,20 +1,16 @@
 import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
-import { products } from "@/lib/products";
+import { useProducts } from "@/hooks/useProducts";
+import { Product } from "@/lib/products";
 import AnimatedSection, { StaggerContainer, StaggerItem } from "@/components/AnimatedSection";
 
-const ProductCard = ({ product }: { product: typeof products[0] }) => (
+const ProductCard = ({ product }: { product: Product }) => (
   <Link
     to={`/produit/${product.slug}`}
     className="group block bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300"
   >
     <div className="relative aspect-square overflow-hidden bg-muted">
-      <img
-        src={product.image}
-        alt={product.name}
-        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        loading="lazy"
-      />
+      <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
       {product.badge && (
         <span className={`absolute top-3 left-3 ${product.badge === "new" ? "badge-new" : "badge-bestseller"}`}>
           {product.badge === "new" ? "Nouveau" : "Best Seller"}
@@ -23,15 +19,10 @@ const ProductCard = ({ product }: { product: typeof products[0] }) => (
     </div>
     <div className="p-4">
       <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{product.category.replace("-", " ")}</p>
-      <h3 className="font-display text-lg font-semibold text-card-foreground mb-2 group-hover:text-primary transition-colors">
-        {product.name}
-      </h3>
+      <h3 className="font-display text-lg font-semibold text-card-foreground mb-2 group-hover:text-primary transition-colors">{product.name}</h3>
       <div className="flex items-center gap-1 mb-3">
         {[...Array(5)].map((_, i) => (
-          <Star
-            key={i}
-            className={`w-3.5 h-3.5 ${i < Math.floor(product.rating) ? "fill-accent text-accent" : "text-border"}`}
-          />
+          <Star key={i} className={`w-3.5 h-3.5 ${i < Math.floor(product.rating) ? "fill-accent text-accent" : "text-border"}`} />
         ))}
         <span className="text-xs text-muted-foreground ml-1">({product.reviews})</span>
       </div>
@@ -46,7 +37,9 @@ const ProductCard = ({ product }: { product: typeof products[0] }) => (
 );
 
 const FeaturedProducts = () => {
+  const { data: products = [] } = useProducts();
   const featured = products.filter((p) => p.badge).slice(0, 4);
+
   return (
     <section className="py-20 lg:py-28">
       <div className="container mx-auto px-4">
@@ -62,10 +55,7 @@ const FeaturedProducts = () => {
           ))}
         </StaggerContainer>
         <AnimatedSection className="text-center mt-12" delay={0.3}>
-          <Link
-            to="/boutique"
-            className="inline-flex items-center px-6 py-3 border-2 border-primary text-primary font-semibold rounded-lg hover:bg-primary hover:text-primary-foreground transition-all text-sm uppercase tracking-wider"
-          >
+          <Link to="/boutique" className="inline-flex items-center px-6 py-3 border-2 border-primary text-primary font-semibold rounded-lg hover:bg-primary hover:text-primary-foreground transition-all text-sm uppercase tracking-wider">
             Voir tous les produits
           </Link>
         </AnimatedSection>
