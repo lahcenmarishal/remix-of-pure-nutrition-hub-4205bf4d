@@ -32,9 +32,34 @@ const CheckoutPage = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (items.length === 0) return;
+
+    const orderItems = items.map(i => ({
+      name: i.product.name,
+      slug: i.product.slug,
+      price: i.product.price,
+      quantity: i.quantity,
+      image: i.product.image,
+    }));
+
+    const { error } = await supabase.from("orders").insert({
+      customer_name: `${form.firstName} ${form.lastName}`,
+      customer_email: form.email || "",
+      customer_phone: form.phone,
+      shipping_address: `${form.address}, ${form.city} ${form.zip}`,
+      items: orderItems,
+      subtotal: subtotal,
+      shipping: shippingCost,
+      total: total,
+    });
+
+    if (error) {
+      toast({ title: "Erreur", description: "Impossible de passer la commande.", variant: "destructive" });
+      return;
+    }
+
     setSubmitted(true);
     clearCart();
     toast({
