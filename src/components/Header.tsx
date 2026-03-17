@@ -68,9 +68,9 @@ const Header = () => {
                 <Settings className="w-5 h-5" />
               </Link>
             )}
-            <button className={`p-2 transition-colors hover:text-accent ${textColor}`}>
+            <Link to="/admin" className={`p-2 transition-colors hover:text-accent ${textColor}`}>
               <User className="w-5 h-5" />
-            </button>
+            </Link>
             <button onClick={openDrawer} className={`p-2 relative transition-colors hover:text-accent ${textColor}`}>
               <ShoppingCart className="w-5 h-5" />
               {totalItems > 0 && (
