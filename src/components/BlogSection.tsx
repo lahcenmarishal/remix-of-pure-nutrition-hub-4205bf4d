@@ -15,15 +15,14 @@ const BlogSection = () => {
   });
 
   // Fallback hardcoded
-  const items = posts.length > 0 ? posts.map((p: any) => ({
-    title: p.title, excerpt: p.excerpt || "",
+  const items = posts.map((p: any) => ({
+    id: p.id,
+    slug: p.slug,
+    title: p.title,
+    excerpt: p.excerpt || "",
     date: p.published_at ? new Date(p.published_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" }) : "",
     image: p.image || "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&q=80",
-  })) : [
-    { title: "Les 5 suppléments essentiels pour les sportifs", excerpt: "Découvrez quels compléments alimentaires peuvent réellement améliorer vos performances.", date: "28 Fév 2026", image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&q=80" },
-    { title: "Guide complet de la créatine", excerpt: "Tout ce que vous devez savoir sur le supplément le plus étudié au monde.", date: "15 Fév 2026", image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&q=80" },
-    { title: "Nutrition et récupération : les clés du succès", excerpt: "Comment optimiser votre alimentation pour maximiser votre récupération musculaire.", date: "3 Fév 2026", image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&q=80" },
-  ];
+  }));
 
   return (
     <section className="py-20 lg:py-28 bg-muted/50">
