@@ -11,6 +11,7 @@ const Header = () => {
   const location = useLocation();
   const isHome = location.pathname === "/";
   const { totalItems, openDrawer } = useCart();
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
