@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 
 const ShopPage = () => {
   const [activeCategory, setActiveCategory] = useState("all");
-  const { data: products = [], isLoading } = useProducts();
+  const { data: products = [], isLoading, isError } = useProducts();
   const { data: categories = [] } = useCategories();
 
   const filtered = activeCategory === "all" ? products : products.filter((p) => p.category === activeCategory);
@@ -23,7 +23,18 @@ const ShopPage = () => {
             </p>
           </div>
 
+          {/* Filtres catégories */}
           <div className="flex flex-wrap justify-center gap-3 mb-12">
+            <button
+              onClick={() => setActiveCategory("all")}
+              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
+                activeCategory === "all"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+              }`}
+            >
+              Tous les produits
+            </button>
             {categories.map((cat: any) => (
               <button
                 key={cat.id}
@@ -40,7 +51,26 @@ const ShopPage = () => {
           </div>
 
           {isLoading ? (
-            <div className="text-center py-20"><p className="text-muted-foreground">Chargement...</p></div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="bg-card rounded-xl overflow-hidden border border-border animate-pulse">
+                  <div className="aspect-square bg-muted" />
+                  <div className="p-4 space-y-3">
+                    <div className="h-3 bg-muted rounded w-1/3" />
+                    <div className="h-5 bg-muted rounded w-3/4" />
+                    <div className="h-4 bg-muted rounded w-1/2" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : isError ? (
+            <div className="text-center py-20">
+              <p className="text-muted-foreground">Impossible de charger les produits. Veuillez réessayer.</p>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-muted-foreground">Aucun produit dans cette catégorie.</p>
+            </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filtered.map((p) => (
@@ -56,3 +86,4 @@ const ShopPage = () => {
 };
 
 export default ShopPage;
+
