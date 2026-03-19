@@ -30,26 +30,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    let initialized = false;
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        if (session?.user) {
-          await checkAdmin(session.user.id);
-        } else {
+        try {
+          if (session?.user) {
+            await checkAdmin(session.user.id);
+          } else {
+            setIsAdmin(false);
+          }
+        } catch {
           setIsAdmin(false);
+        } finally {
+          setLoading(false);
+          initialized = true;
         }
-        setLoading(false);
       }
     );
 
+    // Fallback : si onAuthStateChange ne se déclenche pas dans les 3s
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        checkAdmin(session.user.id);
+      if (!initialized) {
+        setSession(session);
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          checkAdmin(session.user.id).finally(() => setLoading(false));
+        } else {
+          setIsAdmin(false);
+          setLoading(false);
+        }
       }
-      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
