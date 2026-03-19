@@ -5,6 +5,8 @@ import type { Product } from "@/lib/products";
 export function useProducts() {
   return useQuery({
     queryKey: ["products"],
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
     queryFn: async (): Promise<Product[]> => {
       const { data, error } = await supabase
         .from("products")
@@ -36,13 +38,16 @@ export function useProducts() {
 export function useCategories() {
   return useQuery({
     queryKey: ["categories"],
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("categories")
         .select("*")
-        .order("id");
+        .order("label");
       if (error) throw error;
       return data || [];
     },
   });
 }
+
