@@ -19,51 +19,36 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const checkAdmin = async (userId: string) => {
-    const { data } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId)
-      .eq("role", "admin")
-      .maybeSingle();
-    setIsAdmin(!!data);
-  };
-
   useEffect(() => {
-    let initialized = false;
-
+    // onAuthStateChange fires synchronously with INITIAL_SESSION on mount
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      (_event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        try {
-          if (session?.user) {
-            await checkAdmin(session.user.id);
-          } else {
-            setIsAdmin(false);
-          }
-        } catch {
-          setIsAdmin(false);
-        } finally {
-          setLoading(false);
-          initialized = true;
-        }
-      }
-    );
 
-    // Fallback : si onAuthStateChange ne se déclenche pas dans les 3s
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!initialized) {
-        setSession(session);
-        setUser(session?.user ?? null);
         if (session?.user) {
-          checkAdmin(session.user.id).finally(() => setLoading(false));
+          // Use setTimeout to avoid Supabase deadlock when calling DB inside auth callback
+          setTimeout(async () => {
+            try {
+              const { data } = await supabase
+                .from("user_roles")
+                .select("role")
+                .eq("user_id", session.user.id)
+                .eq("role", "admin")
+                .maybeSingle();
+              setIsAdmin(!!data);
+            } catch {
+              setIsAdmin(false);
+            } finally {
+              setLoading(false);
+            }
+          }, 0);
         } else {
           setIsAdmin(false);
           setLoading(false);
         }
       }
-    });
+    );
 
     return () => subscription.unsubscribe();
   }, []);
