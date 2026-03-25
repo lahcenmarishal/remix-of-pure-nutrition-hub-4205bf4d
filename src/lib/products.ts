@@ -4,6 +4,7 @@ export interface Product {
   slug: string;
   price: number;
   originalPrice?: number;
+  shippingPrice?: number | null;
   image: string;
   category: string;
   badge?: "new" | "bestseller";
