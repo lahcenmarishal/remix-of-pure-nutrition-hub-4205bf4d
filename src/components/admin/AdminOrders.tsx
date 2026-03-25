@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { Eye } from "lucide-react";
-import { useState } from "react";
+import { Eye, ShoppingBag, DollarSign, Clock, CheckCircle, XCircle } from "lucide-react";
+import { useState, useMemo } from "react";
 
 const statusLabels: Record<string, string> = {
   pending: "En attente",
@@ -20,6 +20,18 @@ const statusColors: Record<string, string> = {
   cancelled: "bg-red-100 text-red-800",
 };
 
+const StatCard = ({ icon: Icon, label, value, color }: { icon: any; label: string; value: string | number; color: string }) => (
+  <div className="bg-card border border-border rounded-xl p-4 flex items-center gap-4">
+    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${color}`}>
+      <Icon className="w-5 h-5" />
+    </div>
+    <div>
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="text-lg font-bold text-foreground">{value}</p>
+    </div>
+  </div>
+);
+
 const AdminOrders = () => {
   const qc = useQueryClient();
   const [detail, setDetail] = useState<any | null>(null);
@@ -32,6 +44,14 @@ const AdminOrders = () => {
       return data;
     },
   });
+
+  const stats = useMemo(() => {
+    const revenue = orders.filter((o: any) => o.status !== "cancelled").reduce((s: number, o: any) => s + Number(o.total), 0);
+    const pending = orders.filter((o: any) => o.status === "pending").length;
+    const delivered = orders.filter((o: any) => o.status === "delivered").length;
+    const cancelled = orders.filter((o: any) => o.status === "cancelled").length;
+    return { total: orders.length, revenue, pending, delivered, cancelled };
+  }, [orders]);
 
   const updateStatus = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
@@ -98,8 +118,18 @@ const AdminOrders = () => {
   }
 
   return (
-    <div className="space-y-4">
-      <h2 className="font-display text-xl font-bold text-foreground">Commandes ({orders.length})</h2>
+    <div className="space-y-6">
+      <h2 className="font-display text-xl font-bold text-foreground">Commandes</h2>
+
+      {/* Stats cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+        <StatCard icon={ShoppingBag} label="Total commandes" value={stats.total} color="bg-primary/10 text-primary" />
+        <StatCard icon={DollarSign} label="Chiffre d'affaires" value={`${stats.revenue.toFixed(2)} DH`} color="bg-green-100 text-green-700" />
+        <StatCard icon={Clock} label="En attente" value={stats.pending} color="bg-yellow-100 text-yellow-700" />
+        <StatCard icon={CheckCircle} label="Livrées" value={stats.delivered} color="bg-emerald-100 text-emerald-700" />
+        <StatCard icon={XCircle} label="Annulées" value={stats.cancelled} color="bg-red-100 text-red-700" />
+      </div>
+
       {isLoading ? <p className="text-muted-foreground">Chargement...</p> : orders.length === 0 ? (
         <p className="text-muted-foreground">Aucune commande pour le moment.</p>
       ) : (
