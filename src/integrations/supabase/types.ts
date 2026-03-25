@@ -132,6 +132,7 @@ export type Database = {
           category: string
           created_at: string
           description: string | null
+          expiration_date: string | null
           faq: Json | null
           id: string
           image: string
@@ -154,6 +155,7 @@ export type Database = {
           category: string
           created_at?: string
           description?: string | null
+          expiration_date?: string | null
           faq?: Json | null
           id?: string
           image: string
@@ -176,6 +178,7 @@ export type Database = {
           category?: string
           created_at?: string
           description?: string | null
+          expiration_date?: string | null
           faq?: Json | null
           id?: string
           image?: string
