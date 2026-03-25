@@ -161,6 +161,7 @@ const AdminProducts = () => {
               className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
             <p className="text-xs text-muted-foreground mt-1">Date limite de consommation du produit</p>
           </div>
+        </div>
         <div>
           <label className="block text-sm font-medium text-foreground mb-1">Image</label>
           <ImageUpload value={form.image} onChange={url => setForm({ ...form, image: url })} />
