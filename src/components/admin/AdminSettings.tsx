@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSettings, useUpdateSettings } from "@/hooks/useSettings";
 import { toast } from "@/hooks/use-toast";
 import { Save, Phone, Mail, MapPin, Facebook, Instagram, Video, Youtube, Truck } from "lucide-react";
@@ -16,8 +16,8 @@ const AdminSettings = () => {
     instagram: "",
     tiktok: "",
     youtube: "",
-    shipping_price: 50,
-    free_shipping_threshold: 500,
+    shipping_price: 0,
+    free_shipping_threshold: 0,
   });
 
   useEffect(() => {
@@ -31,11 +31,15 @@ const AdminSettings = () => {
         instagram: settings.instagram || "",
         tiktok: settings.tiktok || "",
         youtube: settings.youtube || "",
-        shipping_price: settings.shipping_price ?? 50,
-        free_shipping_threshold: settings.free_shipping_threshold ?? 500,
+        shipping_price: settings.shipping_price ?? 0,
+        free_shipping_threshold: settings.free_shipping_threshold ?? 0,
       });
     }
   }, [settings]);
+
+  const handleChange = useCallback((name: string, value: string | number) => {
+    setForm(prev => ({ ...prev, [name]: value }));
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,7 +51,9 @@ const AdminSettings = () => {
 
   if (isLoading) return <p className="text-muted-foreground">Chargement...</p>;
 
-  const Field = ({ label, name, type = "text", icon: Icon, placeholder }: any) => (
+  const Field = ({ label, name, type = "text", icon: Icon, placeholder }: {
+    label: string; name: string; type?: string; icon: any; placeholder?: string;
+  }) => (
     <div>
       <label className="block text-sm font-medium text-foreground mb-1 flex items-center gap-1.5">
         <Icon className="w-4 h-4 text-muted-foreground" /> {label}
@@ -55,7 +61,7 @@ const AdminSettings = () => {
       <input
         type={type}
         value={(form as any)[name]}
-        onChange={e => setForm({ ...form, [name]: type === "number" ? Number(e.target.value) : e.target.value })}
+        onChange={e => handleChange(name, type === "number" ? Number(e.target.value) : e.target.value)}
         placeholder={placeholder}
         className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none"
       />
@@ -99,7 +105,7 @@ const AdminSettings = () => {
       <div className="bg-card border border-border rounded-xl p-5 space-y-4">
         <h3 className="font-semibold text-foreground text-sm uppercase tracking-wide">Livraison</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Frais de livraison (DH)" name="shipping_price" type="number" icon={Truck} placeholder="50" />
+          <Field label="Frais de livraison (DH)" name="shipping_price" type="number" icon={Truck} placeholder="0" />
           <Field label="Livraison gratuite dès (DH)" name="free_shipping_threshold" type="number" icon={Truck} placeholder="500" />
         </div>
         <p className="text-xs text-muted-foreground">Le frais de livraison global s'applique si le produit n'a pas de frais spécifique.</p>
