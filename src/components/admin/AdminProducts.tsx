@@ -42,6 +42,7 @@ const AdminProducts = () => {
         benefits: p.benefits, ingredients: p.ingredients, faq: p.faq,
         is_active: p.is_active, rating: p.rating, reviews: p.reviews,
         shipping_price: p.shipping_price,
+        expiration_date: p.expiration_date,
       };
       if (p.id) {
         const { error } = await supabase.from("products").update(payload).eq("id", p.id);
