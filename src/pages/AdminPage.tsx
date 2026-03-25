@@ -1,17 +1,23 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate, Link } from "react-router-dom";
-import { Package, ShoppingBag, MessageSquare, FileText, LogOut, Home } from "lucide-react";
+import { Package, ShoppingBag, MessageSquare, FileText, LogOut, Home, Settings, Tag, Megaphone } from "lucide-react";
 import AdminProducts from "@/components/admin/AdminProducts";
 import AdminOrders from "@/components/admin/AdminOrders";
 import AdminTestimonials from "@/components/admin/AdminTestimonials";
 import AdminBlog from "@/components/admin/AdminBlog";
+import AdminSettings from "@/components/admin/AdminSettings";
+import AdminCategories from "@/components/admin/AdminCategories";
+import AdminPromos from "@/components/admin/AdminPromos";
 
 const tabs = [
   { id: "products", label: "Produits", icon: Package },
   { id: "orders", label: "Commandes", icon: ShoppingBag },
   { id: "testimonials", label: "Témoignages", icon: MessageSquare },
   { id: "blog", label: "Blog", icon: FileText },
+  { id: "promos", label: "Promos", icon: Megaphone },
+  { id: "categories", label: "Catégories", icon: Tag },
+  { id: "settings", label: "Paramètres", icon: Settings },
 ];
 
 const AdminPage = () => {
@@ -38,7 +44,7 @@ const AdminPage = () => {
           <h1 className="font-display text-lg font-bold text-foreground">NutriTrax Admin</h1>
           <p className="text-xs text-muted-foreground mt-0.5">{user.email}</p>
         </div>
-        <nav className="flex-1 p-3 space-y-1">
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {tabs.map(t => (
             <button key={t.id} onClick={() => setActive(t.id)}
               className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
@@ -64,7 +70,7 @@ const AdminPage = () => {
           <h1 className="font-display text-lg font-bold text-foreground">Admin</h1>
           <button onClick={signOut} className="text-sm text-muted-foreground"><LogOut className="w-4 h-4" /></button>
         </div>
-        <div className="flex gap-2 overflow-x-auto">
+        <div className="flex gap-2 overflow-x-auto pb-1">
           {tabs.map(t => (
             <button key={t.id} onClick={() => setActive(t.id)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ${
@@ -82,6 +88,9 @@ const AdminPage = () => {
         {active === "orders" && <AdminOrders />}
         {active === "testimonials" && <AdminTestimonials />}
         {active === "blog" && <AdminBlog />}
+        {active === "promos" && <AdminPromos />}
+        {active === "categories" && <AdminCategories />}
+        {active === "settings" && <AdminSettings />}
       </div>
     </div>
   );

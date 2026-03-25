@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronRight, Truck, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
@@ -6,6 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { toast } from "@/hooks/use-toast";
+
+const CUSTOMER_KEY = "nutritrax_customer";
 
 const cities = [
   "Casablanca", "Rabat", "Marrakech", "Fès", "Tanger", "Agadir", "Meknès",
@@ -18,18 +20,27 @@ const CheckoutPage = () => {
   const navigate = useNavigate();
   const [submitted, setSubmitted] = useState(false);
 
-  const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    email: "",
-    address: "",
-    city: "Casablanca",
-    zip: "",
+  const [form, setForm] = useState(() => {
+    try {
+      const saved = localStorage.getItem(CUSTOMER_KEY);
+      if (saved) return { ...JSON.parse(saved) };
+    } catch {}
+    return {
+      firstName: "",
+      lastName: "",
+      phone: "",
+      email: "",
+      address: "",
+      city: "Casablanca",
+      zip: "",
+    };
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const updated = { ...form, [e.target.name]: e.target.value };
+    setForm(updated);
+    // Save customer info for pre-fill next time
+    localStorage.setItem(CUSTOMER_KEY, JSON.stringify(updated));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
