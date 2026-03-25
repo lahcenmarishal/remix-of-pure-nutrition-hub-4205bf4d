@@ -1,19 +1,17 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { useProducts } from "@/hooks/useProducts";
+import { usePromos } from "@/hooks/usePromos";
 import AnimatedSection from "@/components/AnimatedSection";
 
 const PromoCarousel = () => {
-  const { data: products = [], isLoading } = useProducts();
+  const { data: promos = [], isLoading } = usePromos();
   const trackRef = useRef<HTMLDivElement>(null);
   const animRef = useRef<number | null>(null);
   const posRef = useRef(0);
 
-  const promoProducts = products.filter(p => p.promoLabel);
-
   useEffect(() => {
     const track = trackRef.current;
-    if (!track || promoProducts.length === 0) return;
+    if (!track || promos.length === 0) return;
 
     const speed = 0.5;
     const animate = () => {
@@ -28,11 +26,11 @@ const PromoCarousel = () => {
     return () => {
       if (animRef.current) cancelAnimationFrame(animRef.current);
     };
-  }, [promoProducts.length]);
+  }, [promos.length]);
 
-  if (isLoading || promoProducts.length === 0) return null;
+  if (isLoading || promos.length === 0) return null;
 
-  const slides = [...promoProducts, ...promoProducts];
+  const slides = [...promos, ...promos];
 
   return (
     <AnimatedSection className="py-12 overflow-hidden bg-muted/30 border-y border-border">
@@ -42,31 +40,32 @@ const PromoCarousel = () => {
       </div>
       <div className="overflow-hidden">
         <div ref={trackRef} className="flex gap-5 w-max will-change-transform">
-          {slides.map((product, idx) => (
+          {slides.map((promo, idx) => (
             <Link
-              key={`${product.id}-${idx}`}
-              to={`/produit/${product.slug}`}
+              key={`${promo.id}-${idx}`}
+              to={promo.link || "/shop"}
               className="relative flex-shrink-0 w-80 h-48 rounded-2xl overflow-hidden border border-border bg-card group cursor-pointer"
             >
-              <img
-                src={product.image}
-                alt={product.name}
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
+              {promo.image && (
+                <img
+                  src={promo.image}
+                  alt={promo.title}
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
-              <div className="absolute top-3 left-3">
-                <span className="inline-block text-[10px] font-bold uppercase tracking-wider bg-accent text-accent-foreground px-2.5 py-1 rounded-full">
-                  {product.promoLabel}
-                </span>
-              </div>
-              <div className="absolute bottom-0 left-0 p-4">
-                <p className="text-base font-bold text-foreground leading-tight">{product.name}</p>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-sm font-bold text-foreground">{product.price.toFixed(2)} DH</span>
-                  {product.originalPrice && (
-                    <span className="text-xs text-muted-foreground line-through">{product.originalPrice.toFixed(2)} DH</span>
-                  )}
+              {promo.badge && (
+                <div className="absolute top-3 left-3">
+                  <span className="inline-block text-[10px] font-bold uppercase tracking-wider bg-accent text-accent-foreground px-2.5 py-1 rounded-full">
+                    {promo.badge}
+                  </span>
                 </div>
+              )}
+              <div className="absolute bottom-0 left-0 p-4">
+                <p className="text-base font-bold text-foreground leading-tight">{promo.title}</p>
+                {promo.subtitle && (
+                  <p className="text-xs text-muted-foreground mt-1">{promo.subtitle}</p>
+                )}
               </div>
             </Link>
           ))}
