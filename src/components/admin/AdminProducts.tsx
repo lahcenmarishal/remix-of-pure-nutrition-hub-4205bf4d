@@ -11,6 +11,7 @@ const emptyProduct = {
   short_description: "", description: "",
   benefits: [] as string[], ingredients: [] as any[], faq: [] as any[],
   is_active: true, rating: 0, reviews: 0,
+  shipping_price: null as number | null,
 };
 
 const AdminProducts = () => {
@@ -35,6 +36,7 @@ const AdminProducts = () => {
         short_description: p.short_description, description: p.description,
         benefits: p.benefits, ingredients: p.ingredients, faq: p.faq,
         is_active: p.is_active, rating: p.rating, reviews: p.reviews,
+        shipping_price: p.shipping_price,
       };
       if (p.id) {
         const { error } = await supabase.from("products").update(payload).eq("id", p.id);
@@ -74,6 +76,7 @@ const AdminProducts = () => {
       short_description: p.short_description || "", description: p.description || "",
       benefits: p.benefits || [], ingredients: p.ingredients || [], faq: p.faq || [],
       is_active: p.is_active, rating: Number(p.rating), reviews: p.reviews,
+      shipping_price: p.shipping_price != null ? Number(p.shipping_price) : null,
     });
   };
 
@@ -110,6 +113,12 @@ const AdminProducts = () => {
           <div>
             <label className="block text-sm font-medium text-foreground mb-1">Prix barré</label>
             <input type="number" step="0.01" value={form.original_price || ""} onChange={e => setForm({ ...form, original_price: e.target.value ? Number(e.target.value) : null })}
+              className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1">Frais livraison (DH)</label>
+            <input type="number" step="0.01" value={form.shipping_price || ""} onChange={e => setForm({ ...form, shipping_price: e.target.value ? Number(e.target.value) : null })}
+              placeholder="Laisser vide = prix global"
               className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
           </div>
           <div>

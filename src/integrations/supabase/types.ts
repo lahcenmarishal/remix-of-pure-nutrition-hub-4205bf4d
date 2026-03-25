@@ -142,6 +142,7 @@ export type Database = {
           price: number
           rating: number | null
           reviews: number | null
+          shipping_price: number | null
           short_description: string | null
           slug: string
           updated_at: string
@@ -162,6 +163,7 @@ export type Database = {
           price: number
           rating?: number | null
           reviews?: number | null
+          shipping_price?: number | null
           short_description?: string | null
           slug: string
           updated_at?: string
@@ -182,9 +184,91 @@ export type Database = {
           price?: number
           rating?: number | null
           reviews?: number | null
+          shipping_price?: number | null
           short_description?: string | null
           slug?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      promos: {
+        Row: {
+          badge: string | null
+          created_at: string | null
+          id: string
+          image: string | null
+          is_active: boolean | null
+          link: string | null
+          sort_order: number | null
+          subtitle: string | null
+          title: string
+        }
+        Insert: {
+          badge?: string | null
+          created_at?: string | null
+          id?: string
+          image?: string | null
+          is_active?: boolean | null
+          link?: string | null
+          sort_order?: number | null
+          subtitle?: string | null
+          title: string
+        }
+        Update: {
+          badge?: string | null
+          created_at?: string | null
+          id?: string
+          image?: string | null
+          is_active?: boolean | null
+          link?: string | null
+          sort_order?: number | null
+          subtitle?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          address: string | null
+          email: string | null
+          facebook: string | null
+          free_shipping_threshold: number | null
+          id: string
+          instagram: string | null
+          phone: string | null
+          shipping_price: number | null
+          tiktok: string | null
+          updated_at: string | null
+          whatsapp: string | null
+          youtube: string | null
+        }
+        Insert: {
+          address?: string | null
+          email?: string | null
+          facebook?: string | null
+          free_shipping_threshold?: number | null
+          id?: string
+          instagram?: string | null
+          phone?: string | null
+          shipping_price?: number | null
+          tiktok?: string | null
+          updated_at?: string | null
+          whatsapp?: string | null
+          youtube?: string | null
+        }
+        Update: {
+          address?: string | null
+          email?: string | null
+          facebook?: string | null
+          free_shipping_threshold?: number | null
+          id?: string
+          instagram?: string | null
+          phone?: string | null
+          shipping_price?: number | null
+          tiktok?: string | null
+          updated_at?: string | null
+          whatsapp?: string | null
+          youtube?: string | null
         }
         Relationships: []
       }

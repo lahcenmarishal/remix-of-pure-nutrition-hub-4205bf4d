@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useCallback } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
 import { Product } from "@/lib/products";
 
 export interface CartItem {
@@ -21,14 +21,39 @@ interface CartContextType {
   total: number;
 }
 
-const SHIPPING_THRESHOLD = 500;
-const SHIPPING_COST = 50;
+const CART_KEY = "nutritrax_cart";
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+const loadCart = (): CartItem[] => {
+  try {
+    const raw = localStorage.getItem(CART_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+};
+
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>(loadCart);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  // Persist cart to localStorage
+  useEffect(() => {
+    localStorage.setItem(CART_KEY, JSON.stringify(items));
+  }, [items]);
+
+  // Cart abandonment: warn before leaving when cart has items
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (items.length > 0) {
+        e.preventDefault();
+        e.returnValue = "Vous avez des articles dans votre panier. Voulez-vous vraiment quitter ?";
+      }
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [items]);
 
   const openDrawer = useCallback(() => setIsDrawerOpen(true), []);
   const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
@@ -64,11 +89,24 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     );
   }, []);
 
-  const clearCart = useCallback(() => setItems([]), []);
+  const clearCart = useCallback(() => {
+    setItems([]);
+    localStorage.removeItem(CART_KEY);
+  }, []);
 
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
   const subtotal = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
-  const shippingCost = subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+
+  // Use per-product shipping if defined, else fall back to global (read from settings later via hook)
+  const shippingCost = (() => {
+    if (subtotal >= 500) return 0;
+    // Use per-product shipping price of first item if available, else default 50
+    if (items.length > 0 && items[0].product.shippingPrice != null) {
+      return items[0].product.shippingPrice;
+    }
+    return 50;
+  })();
+
   const total = subtotal + shippingCost;
 
   return (

@@ -20,6 +20,7 @@ export function useProducts() {
         slug: p.slug,
         price: Number(p.price),
         originalPrice: p.original_price ? Number(p.original_price) : undefined,
+        shippingPrice: p.shipping_price != null ? Number(p.shipping_price) : null,
         image: p.image,
         category: p.category,
         badge: p.badge as "new" | "bestseller" | undefined,
