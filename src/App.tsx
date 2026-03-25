@@ -31,6 +31,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <ScrollToTop />
             <CartDrawer />
             <WhatsAppButton />
             <Routes>
