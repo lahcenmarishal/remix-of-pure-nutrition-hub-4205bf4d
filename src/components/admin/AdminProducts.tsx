@@ -36,6 +36,7 @@ const AdminProducts = () => {
         short_description: p.short_description, description: p.description,
         benefits: p.benefits, ingredients: p.ingredients, faq: p.faq,
         is_active: p.is_active, rating: p.rating, reviews: p.reviews,
+        shipping_price: p.shipping_price,
       };
       if (p.id) {
         const { error } = await supabase.from("products").update(payload).eq("id", p.id);
