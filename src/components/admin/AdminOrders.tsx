@@ -24,6 +24,17 @@ const AdminOrders = () => {
   const qc = useQueryClient();
   const [detail, setDetail] = useState<any | null>(null);
 
+  const stats = useMemo(() => {
+    const total = orders.length;
+    const revenue = orders.filter((o: any) => o.status !== "cancelled").reduce((s: number, o: any) => s + Number(o.total), 0);
+    const pending = orders.filter((o: any) => o.status === "pending").length;
+    const confirmed = orders.filter((o: any) => o.status === "confirmed").length;
+    const shipped = orders.filter((o: any) => o.status === "shipped").length;
+    const delivered = orders.filter((o: any) => o.status === "delivered").length;
+    const cancelled = orders.filter((o: any) => o.status === "cancelled").length;
+    return { total, revenue, pending, confirmed, shipped, delivered, cancelled };
+  }, [orders]);
+
   const { data: orders = [], isLoading } = useQuery({
     queryKey: ["admin-orders"],
     queryFn: async () => {
