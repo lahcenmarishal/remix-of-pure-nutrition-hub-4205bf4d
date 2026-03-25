@@ -14,7 +14,6 @@ const tabs = [
   { id: "orders", label: "Commandes", icon: ShoppingBag },
   { id: "testimonials", label: "Témoignages", icon: MessageSquare },
   { id: "blog", label: "Blog", icon: FileText },
-  { id: "promos", label: "Promos", icon: Megaphone },
   { id: "categories", label: "Catégories", icon: Tag },
   { id: "settings", label: "Paramètres", icon: Settings },
 ];
