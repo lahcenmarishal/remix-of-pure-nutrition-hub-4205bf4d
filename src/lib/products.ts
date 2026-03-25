@@ -8,6 +8,7 @@ export interface Product {
   image: string;
   category: string;
   badge?: "new" | "bestseller";
+  promoLabel?: string | null;
   rating: number;
   reviews: number;
   shortDescription: string;

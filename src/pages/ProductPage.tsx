@@ -54,7 +54,7 @@ const ProductPage = () => {
           </nav>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
-            <div className="aspect-square rounded-2xl overflow-hidden bg-muted">
+            <div className="aspect-[4/3] max-h-[480px] rounded-2xl overflow-hidden bg-muted">
               <img src={product.image} alt={product.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
             </div>
 

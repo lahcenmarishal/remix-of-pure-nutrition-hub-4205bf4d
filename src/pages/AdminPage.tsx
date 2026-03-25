@@ -1,21 +1,19 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate, Link } from "react-router-dom";
-import { Package, ShoppingBag, MessageSquare, FileText, LogOut, Home, Settings, Tag, Megaphone } from "lucide-react";
+import { Package, ShoppingBag, MessageSquare, FileText, LogOut, Home, Settings, Tag } from "lucide-react";
 import AdminProducts from "@/components/admin/AdminProducts";
 import AdminOrders from "@/components/admin/AdminOrders";
 import AdminTestimonials from "@/components/admin/AdminTestimonials";
 import AdminBlog from "@/components/admin/AdminBlog";
 import AdminSettings from "@/components/admin/AdminSettings";
 import AdminCategories from "@/components/admin/AdminCategories";
-import AdminPromos from "@/components/admin/AdminPromos";
 
 const tabs = [
   { id: "products", label: "Produits", icon: Package },
   { id: "orders", label: "Commandes", icon: ShoppingBag },
   { id: "testimonials", label: "Témoignages", icon: MessageSquare },
   { id: "blog", label: "Blog", icon: FileText },
-  { id: "promos", label: "Promos", icon: Megaphone },
   { id: "categories", label: "Catégories", icon: Tag },
   { id: "settings", label: "Paramètres", icon: Settings },
 ];
@@ -88,7 +86,6 @@ const AdminPage = () => {
         {active === "orders" && <AdminOrders />}
         {active === "testimonials" && <AdminTestimonials />}
         {active === "blog" && <AdminBlog />}
-        {active === "promos" && <AdminPromos />}
         {active === "categories" && <AdminCategories />}
         {active === "settings" && <AdminSettings />}
       </div>

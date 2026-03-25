@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useCategories } from "@/hooks/useProducts";
 import { toast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import ImageUpload from "./ImageUpload";
@@ -8,6 +9,7 @@ import ImageUpload from "./ImageUpload";
 const emptyProduct = {
   name: "", slug: "", price: 0, original_price: null as number | null,
   image: "", category: "", badge: null as string | null,
+  promo_label: null as string | null,
   short_description: "", description: "",
   benefits: [] as string[], ingredients: [] as any[], faq: [] as any[],
   is_active: true, rating: 0, reviews: 0,
@@ -18,6 +20,7 @@ const AdminProducts = () => {
   const qc = useQueryClient();
   const [editing, setEditing] = useState<any | null>(null);
   const [form, setForm] = useState({ ...emptyProduct });
+  const { data: categories = [] } = useCategories();
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["admin-products"],
@@ -33,6 +36,7 @@ const AdminProducts = () => {
       const payload = {
         name: p.name, slug: p.slug, price: p.price, original_price: p.original_price,
         image: p.image, category: p.category, badge: p.badge,
+        promo_label: p.promo_label,
         short_description: p.short_description, description: p.description,
         benefits: p.benefits, ingredients: p.ingredients, faq: p.faq,
         is_active: p.is_active, rating: p.rating, reviews: p.reviews,
@@ -73,6 +77,7 @@ const AdminProducts = () => {
     setForm({
       name: p.name, slug: p.slug, price: Number(p.price), original_price: p.original_price ? Number(p.original_price) : null,
       image: p.image, category: p.category, badge: p.badge,
+      promo_label: p.promo_label || null,
       short_description: p.short_description || "", description: p.description || "",
       benefits: p.benefits || [], ingredients: p.ingredients || [], faq: p.faq || [],
       is_active: p.is_active, rating: Number(p.rating), reviews: p.reviews,
@@ -112,19 +117,24 @@ const AdminProducts = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-foreground mb-1">Prix barré</label>
-            <input type="number" step="0.01" value={form.original_price || ""} onChange={e => setForm({ ...form, original_price: e.target.value ? Number(e.target.value) : null })}
+            <input type="number" step="0.01" value={form.original_price ?? ""} onChange={e => setForm({ ...form, original_price: e.target.value ? Number(e.target.value) : null })}
               className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
           </div>
           <div>
             <label className="block text-sm font-medium text-foreground mb-1">Frais livraison (DH)</label>
-            <input type="number" step="0.01" value={form.shipping_price || ""} onChange={e => setForm({ ...form, shipping_price: e.target.value ? Number(e.target.value) : null })}
+            <input type="number" step="0.01" value={form.shipping_price ?? ""} onChange={e => setForm({ ...form, shipping_price: e.target.value ? Number(e.target.value) : null })}
               placeholder="Laisser vide = prix global"
               className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
           </div>
           <div>
             <label className="block text-sm font-medium text-foreground mb-1">Catégorie</label>
-            <input value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}
-              className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
+            <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}
+              className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm">
+              <option value="">-- Choisir --</option>
+              {categories.map((cat: any) => (
+                <option key={cat.id} value={cat.id}>{cat.label}</option>
+              ))}
+            </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-foreground mb-1">Badge</label>
@@ -134,6 +144,13 @@ const AdminProducts = () => {
               <option value="new">Nouveau</option>
               <option value="bestseller">Best Seller</option>
             </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1">Promo / Offre exclusive</label>
+            <input value={form.promo_label || ""} onChange={e => setForm({ ...form, promo_label: e.target.value || null })}
+              placeholder="Ex: -30%, Offre spéciale, Pack duo..."
+              className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
+            <p className="text-xs text-muted-foreground mt-1">Remplir pour afficher dans le carrousel « Offres exclusives »</p>
           </div>
         </div>
         <div>
@@ -188,6 +205,7 @@ const AdminProducts = () => {
                 <th className="text-left p-3 font-medium text-foreground">Nom</th>
                 <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Prix</th>
                 <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Catégorie</th>
+                <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Promo</th>
                 <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Statut</th>
                 <th className="text-right p-3 font-medium text-foreground">Actions</th>
               </tr>
@@ -199,6 +217,11 @@ const AdminProducts = () => {
                   <td className="p-3 text-foreground font-medium">{p.name}</td>
                   <td className="p-3 text-foreground hidden md:table-cell">{Number(p.price).toFixed(2)} DH</td>
                   <td className="p-3 text-muted-foreground hidden md:table-cell">{p.category}</td>
+                  <td className="p-3 hidden md:table-cell">
+                    {p.promo_label ? (
+                      <span className="text-xs px-2 py-1 rounded-full bg-accent/10 text-accent font-medium">{p.promo_label}</span>
+                    ) : <span className="text-xs text-muted-foreground">—</span>}
+                  </td>
                   <td className="p-3 hidden md:table-cell">
                     <span className={`text-xs px-2 py-1 rounded-full ${p.is_active ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
                       {p.is_active ? "Actif" : "Inactif"}
