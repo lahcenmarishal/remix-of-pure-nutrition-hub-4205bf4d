@@ -140,6 +140,7 @@ export type Database = {
           name: string
           original_price: number | null
           price: number
+          promo_label: string | null
           rating: number | null
           reviews: number | null
           shipping_price: number | null
@@ -161,6 +162,7 @@ export type Database = {
           name: string
           original_price?: number | null
           price: number
+          promo_label?: string | null
           rating?: number | null
           reviews?: number | null
           shipping_price?: number | null
@@ -182,6 +184,7 @@ export type Database = {
           name?: string
           original_price?: number | null
           price?: number
+          promo_label?: string | null
           rating?: number | null
           reviews?: number | null
           shipping_price?: number | null
