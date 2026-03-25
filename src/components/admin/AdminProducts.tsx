@@ -14,6 +14,7 @@ const emptyProduct = {
   benefits: [] as string[], ingredients: [] as any[], faq: [] as any[],
   is_active: true, rating: 0, reviews: 0,
   shipping_price: null as number | null,
+  expiration_date: null as string | null,
 };
 
 const AdminProducts = () => {
