@@ -11,10 +11,19 @@ const ProductCard = ({ product }: { product: Product }) => (
   >
     <div className="relative aspect-square overflow-hidden bg-muted">
       <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-      {product.badge && (
-        <span className={`absolute top-3 left-3 ${product.badge === "new" ? "badge-new" : "badge-bestseller"}`}>
-          {product.badge === "new" ? "Nouveau" : "Best Seller"}
-        </span>
+      {(product.badge || product.promoLabel) && (
+        <div className="absolute top-3 left-3 flex flex-col gap-1">
+          {product.badge && (
+            <span className={product.badge === "new" ? "badge-new" : "badge-bestseller"}>
+              {product.badge === "new" ? "Nouveau" : "Best Seller"}
+            </span>
+          )}
+          {product.promoLabel && (
+            <span className="inline-block text-[10px] font-bold uppercase tracking-wider bg-accent text-accent-foreground px-2 py-0.5 rounded-full">
+              {product.promoLabel}
+            </span>
+          )}
+        </div>
       )}
     </div>
     <div className="p-4">

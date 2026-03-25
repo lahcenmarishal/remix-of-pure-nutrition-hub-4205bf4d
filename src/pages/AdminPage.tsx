@@ -86,7 +86,6 @@ const AdminPage = () => {
         {active === "orders" && <AdminOrders />}
         {active === "testimonials" && <AdminTestimonials />}
         {active === "blog" && <AdminBlog />}
-        {active === "promos" && <AdminPromos />}
         {active === "categories" && <AdminCategories />}
         {active === "settings" && <AdminSettings />}
       </div>

@@ -108,7 +108,7 @@ const Header = () => {
               </button>
 
               {searchOpen && (
-                <div className="absolute right-0 top-full mt-2 w-80 bg-background/98 backdrop-blur-md border border-border rounded-xl shadow-xl overflow-hidden z-50">
+                <div className="absolute right-0 top-full mt-2 w-80 bg-background border border-border rounded-xl shadow-xl overflow-hidden z-50">
                   <div className="flex items-center gap-2 px-3 py-2 border-b border-border">
                     <Search className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                     <input

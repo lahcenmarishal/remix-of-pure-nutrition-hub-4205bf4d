@@ -24,6 +24,7 @@ export function useProducts() {
         image: p.image,
         category: p.category,
         badge: p.badge as "new" | "bestseller" | undefined,
+        promoLabel: p.promo_label || null,
         rating: Number(p.rating),
         reviews: p.reviews,
         shortDescription: p.short_description || "",
