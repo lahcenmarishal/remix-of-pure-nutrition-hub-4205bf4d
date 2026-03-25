@@ -14,6 +14,7 @@ const emptyProduct = {
   benefits: [] as string[], ingredients: [] as any[], faq: [] as any[],
   is_active: true, rating: 0, reviews: 0,
   shipping_price: null as number | null,
+  expiration_date: null as string | null,
 };
 
 const AdminProducts = () => {
@@ -41,6 +42,7 @@ const AdminProducts = () => {
         benefits: p.benefits, ingredients: p.ingredients, faq: p.faq,
         is_active: p.is_active, rating: p.rating, reviews: p.reviews,
         shipping_price: p.shipping_price,
+        expiration_date: p.expiration_date,
       };
       if (p.id) {
         const { error } = await supabase.from("products").update(payload).eq("id", p.id);
@@ -82,6 +84,7 @@ const AdminProducts = () => {
       benefits: p.benefits || [], ingredients: p.ingredients || [], faq: p.faq || [],
       is_active: p.is_active, rating: Number(p.rating), reviews: p.reviews,
       shipping_price: p.shipping_price != null ? Number(p.shipping_price) : null,
+      expiration_date: p.expiration_date || null,
     });
   };
 
@@ -151,6 +154,12 @@ const AdminProducts = () => {
               placeholder="Ex: -30%, Offre spéciale, Pack duo..."
               className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
             <p className="text-xs text-muted-foreground mt-1">Remplir pour afficher dans le carrousel « Offres exclusives »</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1">Date d'expiration</label>
+            <input type="date" value={form.expiration_date || ""} onChange={e => setForm({ ...form, expiration_date: e.target.value || null })}
+              className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
+            <p className="text-xs text-muted-foreground mt-1">Date limite de consommation du produit</p>
           </div>
         </div>
         <div>

@@ -1,0 +1,1 @@
+ALTER TABLE public.products ADD COLUMN expiration_date date DEFAULT NULL;
