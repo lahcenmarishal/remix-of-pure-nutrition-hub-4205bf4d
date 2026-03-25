@@ -19,6 +19,7 @@ import AdminLoginPage from "./pages/AdminLoginPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import TestimonialsPage from "./pages/TestimonialsPage";
 import NotFound from "./pages/NotFound";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
