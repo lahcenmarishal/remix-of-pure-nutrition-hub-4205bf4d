@@ -31,6 +31,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <CartDrawer />
+            <WhatsAppButton />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/boutique" element={<ShopPage />} />
