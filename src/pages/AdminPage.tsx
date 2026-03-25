@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate, Link } from "react-router-dom";
-import { Package, ShoppingBag, MessageSquare, FileText, LogOut, Home, Settings, Tag, Megaphone } from "lucide-react";
+import { Package, ShoppingBag, MessageSquare, FileText, LogOut, Home, Settings, Tag } from "lucide-react";
 import AdminProducts from "@/components/admin/AdminProducts";
 import AdminOrders from "@/components/admin/AdminOrders";
 import AdminTestimonials from "@/components/admin/AdminTestimonials";
 import AdminBlog from "@/components/admin/AdminBlog";
 import AdminSettings from "@/components/admin/AdminSettings";
 import AdminCategories from "@/components/admin/AdminCategories";
-import AdminPromos from "@/components/admin/AdminPromos";
 
 const tabs = [
   { id: "products", label: "Produits", icon: Package },
