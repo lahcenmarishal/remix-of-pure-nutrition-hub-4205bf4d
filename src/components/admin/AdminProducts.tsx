@@ -100,6 +100,7 @@ const AdminProducts = () => {
   const startNew = () => {
     setEditing({});
     setForm({ ...emptyProduct });
+    setCatQuery("");
   };
 
   if (editing !== null) {
