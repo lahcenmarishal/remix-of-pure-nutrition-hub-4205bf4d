@@ -23,6 +23,8 @@ const AdminProducts = () => {
   const qc = useQueryClient();
   const [editing, setEditing] = useState<any | null>(null);
   const [form, setForm] = useState({ ...emptyProduct });
+  const [catQuery, setCatQuery] = useState("");
+  const [showCatDropdown, setShowCatDropdown] = useState(false);
   const { data: categories = [] } = useCategories();
 
   const { data: products = [], isLoading } = useQuery({
