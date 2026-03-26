@@ -303,7 +303,7 @@ const CheckoutPage = () => {
                   </div>
                   {shippingCost > 0 && (
                     <p className="text-xs text-muted-foreground">
-                      Livraison gratuite dès 500 DH d'achat
+                      Livraison gratuite dès {freeShippingThreshold} DH d'achat
                     </p>
                   )}
                   <div className="flex justify-between text-lg font-bold text-foreground pt-3 border-t border-border">

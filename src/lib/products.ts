@@ -6,6 +6,7 @@ export interface Product {
   originalPrice?: number;
   shippingPrice?: number | null;
   image: string;
+  images?: string[];
   category: string;
   badge?: "new" | "bestseller";
   promoLabel?: string | null;
