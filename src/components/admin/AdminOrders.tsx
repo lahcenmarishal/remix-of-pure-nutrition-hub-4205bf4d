@@ -154,7 +154,7 @@ const AdminOrders = () => {
               <th className="text-right p-3 font-medium text-foreground">Actions</th>
             </tr></thead>
             <tbody>
-              {orders.map((o: any) => (
+              {orders.filter((o: any) => !statusFilter || o.status === statusFilter).map((o: any) => (
                 <tr key={o.id} className="border-t border-border">
                   <td className="p-3 text-foreground font-mono text-xs">#{o.id.slice(0, 8)}</td>
                   <td className="p-3 text-foreground">{o.customer_name}</td>
