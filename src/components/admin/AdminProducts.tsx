@@ -185,6 +185,18 @@ const AdminProducts = () => {
               className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
             <p className="text-xs text-muted-foreground mt-1">Date limite de consommation du produit</p>
           </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1">Code-barres</label>
+            <input value={form.barcode || ""} onChange={e => setForm({ ...form, barcode: e.target.value || null })}
+              placeholder="EAN-13, UPC..."
+              className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1">Priorité d'affichage</label>
+            <input type="number" value={form.sort_order} onChange={e => setForm({ ...form, sort_order: Number(e.target.value) })}
+              className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
+            <p className="text-xs text-muted-foreground mt-1">Plus le chiffre est élevé, plus le produit s'affiche en premier</p>
+          </div>
         </div>
         <div>
           <label className="block text-sm font-medium text-foreground mb-1">Image</label>
