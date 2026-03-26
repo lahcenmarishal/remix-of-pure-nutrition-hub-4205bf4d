@@ -3,7 +3,7 @@ import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 
 const CartDrawer = () => {
-  const { items, isDrawerOpen, closeDrawer, updateQuantity, removeFromCart, subtotal, shippingCost, total } = useCart();
+  const { items, isDrawerOpen, closeDrawer, updateQuantity, removeFromCart, subtotal, shippingCost, total, freeShippingThreshold } = useCart();
 
   if (!isDrawerOpen) return null;
 
