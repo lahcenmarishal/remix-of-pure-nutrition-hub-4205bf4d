@@ -13,6 +13,7 @@ const ProductPage = () => {
   const product = products.find((p) => p.slug === slug);
   const [qty, setQty] = useState(1);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [selectedImage, setSelectedImage] = useState(0);
   const { addToCart } = useCart();
 
   if (isLoading) {
@@ -38,6 +39,7 @@ const ProductPage = () => {
     );
   }
 
+  const allImages = [product.image, ...(product.images || [])].filter(Boolean);
   const related = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 3);
 
   return (
@@ -54,8 +56,21 @@ const ProductPage = () => {
           </nav>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
-            <div className="aspect-[4/3] max-h-[480px] rounded-2xl overflow-hidden bg-muted">
-              <img src={product.image} alt={product.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+            {/* Image gallery */}
+            <div className="space-y-3">
+              <div className="aspect-[4/3] max-h-[480px] rounded-2xl overflow-hidden bg-muted">
+                <img src={allImages[selectedImage] || product.image} alt={product.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+              </div>
+              {allImages.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto pb-1">
+                  {allImages.map((img, i) => (
+                    <button key={i} onClick={() => setSelectedImage(i)}
+                      className={`w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-colors ${selectedImage === i ? "border-primary" : "border-transparent"}`}>
+                      <img src={img} alt="" className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col justify-center">
@@ -65,6 +80,11 @@ const ProductPage = () => {
                 </span>
               )}
               <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">{product.name}</h1>
+
+              {product.shortDescription && (
+                <p className="text-muted-foreground text-sm mb-4">{product.shortDescription}</p>
+              )}
+
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex gap-0.5">
                   {[...Array(5)].map((_, i) => (

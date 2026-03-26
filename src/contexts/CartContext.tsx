@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
 import { Product } from "@/lib/products";
+import { useSettings } from "@/hooks/useSettings";
 
 export interface CartItem {
   product: Product;
@@ -19,6 +20,7 @@ interface CartContextType {
   subtotal: number;
   shippingCost: number;
   total: number;
+  freeShippingThreshold: number;
 }
 
 const CART_KEY = "nutritrax_cart";
@@ -37,13 +39,15 @@ const loadCart = (): CartItem[] => {
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>(loadCart);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { data: settings } = useSettings();
 
-  // Persist cart to localStorage
+  const globalShippingPrice = settings?.shipping_price ?? 50;
+  const freeShippingThreshold = settings?.free_shipping_threshold ?? 500;
+
   useEffect(() => {
     localStorage.setItem(CART_KEY, JSON.stringify(items));
   }, [items]);
 
-  // Cart abandonment: warn before leaving when cart has items
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
       if (items.length > 0) {
@@ -97,14 +101,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
   const subtotal = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
 
-  // Use per-product shipping if defined, else fall back to global (read from settings later via hook)
   const shippingCost = (() => {
-    if (subtotal >= 500) return 0;
-    // Use per-product shipping price of first item if available, else default 50
+    if (subtotal >= freeShippingThreshold) return 0;
+    // Per-product shipping if defined
     if (items.length > 0 && items[0].product.shippingPrice != null) {
       return items[0].product.shippingPrice;
     }
-    return 50;
+    return globalShippingPrice;
   })();
 
   const total = subtotal + shippingCost;
@@ -112,18 +115,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   return (
     <CartContext.Provider
       value={{
-        items,
-        isDrawerOpen,
-        openDrawer,
-        closeDrawer,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart,
-        totalItems,
-        subtotal,
-        shippingCost,
-        total,
+        items, isDrawerOpen, openDrawer, closeDrawer,
+        addToCart, removeFromCart, updateQuantity, clearCart,
+        totalItems, subtotal, shippingCost, total, freeShippingThreshold,
       }}
     >
       {children}

@@ -35,6 +35,7 @@ export function useProducts() {
         faq: (p.faq as any[]) || [],
         barcode: p.barcode || null,
         sortOrder: p.sort_order ?? 0,
+        images: p.images || [],
       }));
     },
   });

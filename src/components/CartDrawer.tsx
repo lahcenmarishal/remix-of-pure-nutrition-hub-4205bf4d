@@ -3,7 +3,7 @@ import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 
 const CartDrawer = () => {
-  const { items, isDrawerOpen, closeDrawer, updateQuantity, removeFromCart, subtotal, shippingCost, total } = useCart();
+  const { items, isDrawerOpen, closeDrawer, updateQuantity, removeFromCart, subtotal, shippingCost, total, freeShippingThreshold } = useCart();
 
   if (!isDrawerOpen) return null;
 
@@ -88,9 +88,9 @@ const CartDrawer = () => {
                 {shippingCost === 0 ? "Gratuite" : `${shippingCost.toFixed(2)} DH`}
               </span>
             </div>
-            {shippingCost > 0 && (
+            {shippingCost > 0 && subtotal < freeShippingThreshold && (
               <p className="text-xs text-muted-foreground">
-                Plus que {(500 - subtotal).toFixed(2)} DH pour la livraison gratuite !
+                Plus que {(freeShippingThreshold - subtotal).toFixed(2)} DH pour la livraison gratuite !
               </p>
             )}
             <div className="flex justify-between text-lg font-bold text-foreground pt-2 border-t border-border">
