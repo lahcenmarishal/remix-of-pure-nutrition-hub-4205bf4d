@@ -139,15 +139,29 @@ const AdminProducts = () => {
               placeholder="Laisser vide = prix global"
               className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
           </div>
-          <div>
+          <div className="relative">
             <label className="block text-sm font-medium text-foreground mb-1">Catégorie</label>
-            <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}
-              className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm">
-              <option value="">-- Choisir --</option>
-              {categories.map((cat: any) => (
-                <option key={cat.id} value={cat.id}>{cat.label}</option>
-              ))}
-            </select>
+            <input value={catQuery} onChange={e => {
+              setCatQuery(e.target.value);
+              setShowCatDropdown(true);
+              const match = categories.find((c: any) => c.label.toLowerCase() === e.target.value.toLowerCase());
+              setForm({ ...form, category: match ? match.id : "" });
+            }}
+              onFocus={() => setShowCatDropdown(true)}
+              onBlur={() => setTimeout(() => setShowCatDropdown(false), 200)}
+              placeholder="Tapez pour rechercher..."
+              className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
+            {showCatDropdown && categories.filter((c: any) => c.label.toLowerCase().includes(catQuery.toLowerCase())).length > 0 && (
+              <div className="absolute z-10 w-full mt-1 bg-card border border-border rounded-lg shadow-lg max-h-40 overflow-y-auto">
+                {categories.filter((c: any) => c.label.toLowerCase().includes(catQuery.toLowerCase())).map((cat: any) => (
+                  <button key={cat.id} type="button"
+                    onMouseDown={() => { setForm({ ...form, category: cat.id }); setCatQuery(cat.label); setShowCatDropdown(false); }}
+                    className="w-full text-left px-3 py-2 text-sm text-foreground hover:bg-muted transition-colors">
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-foreground mb-1">Badge</label>
