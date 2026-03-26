@@ -91,7 +91,10 @@ const AdminProducts = () => {
       is_active: p.is_active, rating: Number(p.rating), reviews: p.reviews,
       shipping_price: p.shipping_price != null ? Number(p.shipping_price) : null,
       expiration_date: p.expiration_date || null,
+      barcode: p.barcode || null,
+      sort_order: p.sort_order ?? 0,
     });
+    setCatQuery(categories.find((c: any) => c.id === p.category)?.label || p.category || "");
   };
 
   const startNew = () => {
