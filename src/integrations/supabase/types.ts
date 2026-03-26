@@ -137,6 +137,7 @@ export type Database = {
           faq: Json | null
           id: string
           image: string
+          images: string[] | null
           ingredients: Json | null
           is_active: boolean | null
           name: string
@@ -162,6 +163,7 @@ export type Database = {
           faq?: Json | null
           id?: string
           image: string
+          images?: string[] | null
           ingredients?: Json | null
           is_active?: boolean | null
           name: string
@@ -187,6 +189,7 @@ export type Database = {
           faq?: Json | null
           id?: string
           image?: string
+          images?: string[] | null
           ingredients?: Json | null
           is_active?: boolean | null
           name?: string
