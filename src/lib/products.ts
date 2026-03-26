@@ -16,6 +16,8 @@ export interface Product {
   benefits: string[];
   ingredients: { name: string; amount: string }[];
   faq: { question: string; answer: string }[];
+  barcode?: string | null;
+  sortOrder?: number;
 }
 
 export const products: Product[] = [

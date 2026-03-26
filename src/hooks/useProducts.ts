@@ -33,6 +33,8 @@ export function useProducts() {
         benefits: p.benefits || [],
         ingredients: (p.ingredients as any[]) || [],
         faq: (p.faq as any[]) || [],
+        barcode: p.barcode || null,
+        sortOrder: p.sort_order ?? 0,
       }));
     },
   });
