@@ -35,6 +35,7 @@ const StatCard = ({ icon: Icon, label, value, color }: { icon: any; label: strin
 const AdminOrders = () => {
   const qc = useQueryClient();
   const [detail, setDetail] = useState<any | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
 
   const { data: orders = [], isLoading } = useQuery({
     queryKey: ["admin-orders"],

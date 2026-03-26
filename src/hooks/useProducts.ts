@@ -12,6 +12,7 @@ export function useProducts() {
         .from("products")
         .select("*")
         .eq("is_active", true)
+        .order("sort_order", { ascending: false })
         .order("created_at", { ascending: false });
       if (error) throw error;
       return (data || []).map((p: any) => ({
