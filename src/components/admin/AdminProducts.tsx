@@ -15,6 +15,8 @@ const emptyProduct = {
   is_active: true, rating: 0, reviews: 0,
   shipping_price: null as number | null,
   expiration_date: null as string | null,
+  barcode: null as string | null,
+  sort_order: 0,
 };
 
 const AdminProducts = () => {
