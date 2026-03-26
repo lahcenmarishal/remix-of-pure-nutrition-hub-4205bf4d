@@ -20,8 +20,9 @@ const statusColors: Record<string, string> = {
   cancelled: "bg-red-100 text-red-800",
 };
 
-const StatCard = ({ icon: Icon, label, value, color }: { icon: any; label: string; value: string | number; color: string }) => (
-  <div className="bg-card border border-border rounded-xl p-4 flex items-center gap-4">
+const StatCard = ({ icon: Icon, label, value, color, active, onClick }: { icon: any; label: string; value: string | number; color: string; active?: boolean; onClick?: () => void }) => (
+  <div onClick={onClick}
+    className={`bg-card border rounded-xl p-4 flex items-center gap-4 cursor-pointer transition-all ${active ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/50"}`}>
     <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${color}`}>
       <Icon className="w-5 h-5" />
     </div>
