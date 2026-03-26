@@ -128,6 +128,7 @@ export type Database = {
       products: {
         Row: {
           badge: string | null
+          barcode: string | null
           benefits: string[] | null
           category: string
           created_at: string
@@ -147,10 +148,12 @@ export type Database = {
           shipping_price: number | null
           short_description: string | null
           slug: string
+          sort_order: number | null
           updated_at: string
         }
         Insert: {
           badge?: string | null
+          barcode?: string | null
           benefits?: string[] | null
           category: string
           created_at?: string
@@ -170,10 +173,12 @@ export type Database = {
           shipping_price?: number | null
           short_description?: string | null
           slug: string
+          sort_order?: number | null
           updated_at?: string
         }
         Update: {
           badge?: string | null
+          barcode?: string | null
           benefits?: string[] | null
           category?: string
           created_at?: string
@@ -193,6 +198,7 @@ export type Database = {
           shipping_price?: number | null
           short_description?: string | null
           slug?: string
+          sort_order?: number | null
           updated_at?: string
         }
         Relationships: []

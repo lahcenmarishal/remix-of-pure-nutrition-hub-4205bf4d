@@ -19,6 +19,7 @@ import AdminLoginPage from "./pages/AdminLoginPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import TestimonialsPage from "./pages/TestimonialsPage";
 import NotFound from "./pages/NotFound";
+import ScanPage from "./pages/ScanPage";
 import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/admin/login" element={<AdminLoginPage />} />
+              <Route path="/scan" element={<ScanPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

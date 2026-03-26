@@ -12,6 +12,7 @@ export function useProducts() {
         .from("products")
         .select("*")
         .eq("is_active", true)
+        .order("sort_order", { ascending: false })
         .order("created_at", { ascending: false });
       if (error) throw error;
       return (data || []).map((p: any) => ({
@@ -32,6 +33,8 @@ export function useProducts() {
         benefits: p.benefits || [],
         ingredients: (p.ingredients as any[]) || [],
         faq: (p.faq as any[]) || [],
+        barcode: p.barcode || null,
+        sortOrder: p.sort_order ?? 0,
       }));
     },
   });

@@ -15,12 +15,16 @@ const emptyProduct = {
   is_active: true, rating: 0, reviews: 0,
   shipping_price: null as number | null,
   expiration_date: null as string | null,
+  barcode: null as string | null,
+  sort_order: 0,
 };
 
 const AdminProducts = () => {
   const qc = useQueryClient();
   const [editing, setEditing] = useState<any | null>(null);
   const [form, setForm] = useState({ ...emptyProduct });
+  const [catQuery, setCatQuery] = useState("");
+  const [showCatDropdown, setShowCatDropdown] = useState(false);
   const { data: categories = [] } = useCategories();
 
   const { data: products = [], isLoading } = useQuery({
@@ -43,6 +47,8 @@ const AdminProducts = () => {
         is_active: p.is_active, rating: p.rating, reviews: p.reviews,
         shipping_price: p.shipping_price,
         expiration_date: p.expiration_date,
+        barcode: p.barcode || null,
+        sort_order: p.sort_order,
       };
       if (p.id) {
         const { error } = await supabase.from("products").update(payload).eq("id", p.id);
@@ -85,12 +91,16 @@ const AdminProducts = () => {
       is_active: p.is_active, rating: Number(p.rating), reviews: p.reviews,
       shipping_price: p.shipping_price != null ? Number(p.shipping_price) : null,
       expiration_date: p.expiration_date || null,
+      barcode: p.barcode || null,
+      sort_order: p.sort_order ?? 0,
     });
+    setCatQuery(categories.find((c: any) => c.id === p.category)?.label || p.category || "");
   };
 
   const startNew = () => {
     setEditing({});
     setForm({ ...emptyProduct });
+    setCatQuery("");
   };
 
   if (editing !== null) {
@@ -129,15 +139,29 @@ const AdminProducts = () => {
               placeholder="Laisser vide = prix global"
               className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
           </div>
-          <div>
+          <div className="relative">
             <label className="block text-sm font-medium text-foreground mb-1">Catégorie</label>
-            <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}
-              className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm">
-              <option value="">-- Choisir --</option>
-              {categories.map((cat: any) => (
-                <option key={cat.id} value={cat.id}>{cat.label}</option>
-              ))}
-            </select>
+            <input value={catQuery} onChange={e => {
+              setCatQuery(e.target.value);
+              setShowCatDropdown(true);
+              const match = categories.find((c: any) => c.label.toLowerCase() === e.target.value.toLowerCase());
+              setForm({ ...form, category: match ? match.id : "" });
+            }}
+              onFocus={() => setShowCatDropdown(true)}
+              onBlur={() => setTimeout(() => setShowCatDropdown(false), 200)}
+              placeholder="Tapez pour rechercher..."
+              className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
+            {showCatDropdown && categories.filter((c: any) => c.label.toLowerCase().includes(catQuery.toLowerCase())).length > 0 && (
+              <div className="absolute z-10 w-full mt-1 bg-card border border-border rounded-lg shadow-lg max-h-40 overflow-y-auto">
+                {categories.filter((c: any) => c.label.toLowerCase().includes(catQuery.toLowerCase())).map((cat: any) => (
+                  <button key={cat.id} type="button"
+                    onMouseDown={() => { setForm({ ...form, category: cat.id }); setCatQuery(cat.label); setShowCatDropdown(false); }}
+                    className="w-full text-left px-3 py-2 text-sm text-foreground hover:bg-muted transition-colors">
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-foreground mb-1">Badge</label>
@@ -160,6 +184,18 @@ const AdminProducts = () => {
             <input type="date" value={form.expiration_date || ""} onChange={e => setForm({ ...form, expiration_date: e.target.value || null })}
               className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
             <p className="text-xs text-muted-foreground mt-1">Date limite de consommation du produit</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1">Code-barres</label>
+            <input value={form.barcode || ""} onChange={e => setForm({ ...form, barcode: e.target.value || null })}
+              placeholder="EAN-13, UPC..."
+              className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1">Priorité d'affichage</label>
+            <input type="number" value={form.sort_order} onChange={e => setForm({ ...form, sort_order: Number(e.target.value) })}
+              className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
+            <p className="text-xs text-muted-foreground mt-1">Plus le chiffre est élevé, plus le produit s'affiche en premier</p>
           </div>
         </div>
         <div>

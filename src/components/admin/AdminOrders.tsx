@@ -20,8 +20,9 @@ const statusColors: Record<string, string> = {
   cancelled: "bg-red-100 text-red-800",
 };
 
-const StatCard = ({ icon: Icon, label, value, color }: { icon: any; label: string; value: string | number; color: string }) => (
-  <div className="bg-card border border-border rounded-xl p-4 flex items-center gap-4">
+const StatCard = ({ icon: Icon, label, value, color, active, onClick }: { icon: any; label: string; value: string | number; color: string; active?: boolean; onClick?: () => void }) => (
+  <div onClick={onClick}
+    className={`bg-card border rounded-xl p-4 flex items-center gap-4 cursor-pointer transition-all ${active ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/50"}`}>
     <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${color}`}>
       <Icon className="w-5 h-5" />
     </div>
@@ -35,6 +36,7 @@ const StatCard = ({ icon: Icon, label, value, color }: { icon: any; label: strin
 const AdminOrders = () => {
   const qc = useQueryClient();
   const [detail, setDetail] = useState<any | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
 
   const { data: orders = [], isLoading } = useQuery({
     queryKey: ["admin-orders"],
@@ -123,15 +125,23 @@ const AdminOrders = () => {
 
       {/* Stats cards */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-        <StatCard icon={ShoppingBag} label="Total commandes" value={stats.total} color="bg-primary/10 text-primary" />
-        <StatCard icon={DollarSign} label="Chiffre d'affaires" value={`${stats.revenue.toFixed(2)} DH`} color="bg-green-100 text-green-700" />
-        <StatCard icon={Clock} label="En attente" value={stats.pending} color="bg-yellow-100 text-yellow-700" />
-        <StatCard icon={CheckCircle} label="Livrées" value={stats.delivered} color="bg-emerald-100 text-emerald-700" />
-        <StatCard icon={XCircle} label="Annulées" value={stats.cancelled} color="bg-red-100 text-red-700" />
+        <StatCard icon={ShoppingBag} label="Total commandes" value={stats.total} color="bg-primary/10 text-primary" active={statusFilter === null} onClick={() => setStatusFilter(null)} />
+        <StatCard icon={DollarSign} label="Chiffre d'affaires" value={`${stats.revenue.toFixed(2)} DH`} color="bg-green-100 text-green-700" onClick={() => setStatusFilter(null)} />
+        <StatCard icon={Clock} label="En attente" value={stats.pending} color="bg-yellow-100 text-yellow-700" active={statusFilter === "pending"} onClick={() => setStatusFilter(statusFilter === "pending" ? null : "pending")} />
+        <StatCard icon={CheckCircle} label="Livrées" value={stats.delivered} color="bg-emerald-100 text-emerald-700" active={statusFilter === "delivered"} onClick={() => setStatusFilter(statusFilter === "delivered" ? null : "delivered")} />
+        <StatCard icon={XCircle} label="Annulées" value={stats.cancelled} color="bg-red-100 text-red-700" active={statusFilter === "cancelled"} onClick={() => setStatusFilter(statusFilter === "cancelled" ? null : "cancelled")} />
       </div>
 
-      {isLoading ? <p className="text-muted-foreground">Chargement...</p> : orders.length === 0 ? (
-        <p className="text-muted-foreground">Aucune commande pour le moment.</p>
+      {statusFilter && (
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">Filtre :</span>
+          <span className={`text-xs px-2 py-1 rounded-full font-medium ${statusColors[statusFilter]}`}>{statusLabels[statusFilter]}</span>
+          <button onClick={() => setStatusFilter(null)} className="text-xs text-muted-foreground hover:text-foreground underline">Effacer</button>
+        </div>
+      )}
+
+      {isLoading ? <p className="text-muted-foreground">Chargement...</p> : orders.filter((o: any) => !statusFilter || o.status === statusFilter).length === 0 ? (
+        <p className="text-muted-foreground">{statusFilter ? "Aucune commande avec ce statut." : "Aucune commande pour le moment."}</p>
       ) : (
         <div className="border border-border rounded-xl overflow-hidden">
           <table className="w-full text-sm">
@@ -144,7 +154,7 @@ const AdminOrders = () => {
               <th className="text-right p-3 font-medium text-foreground">Actions</th>
             </tr></thead>
             <tbody>
-              {orders.map((o: any) => (
+              {orders.filter((o: any) => !statusFilter || o.status === statusFilter).map((o: any) => (
                 <tr key={o.id} className="border-t border-border">
                   <td className="p-3 text-foreground font-mono text-xs">#{o.id.slice(0, 8)}</td>
                   <td className="p-3 text-foreground">{o.customer_name}</td>

@@ -88,8 +88,8 @@ const ContactPage = () => {
               <AnimatedSection direction="right">
                 <div className="h-full min-h-[400px] rounded-2xl overflow-hidden border border-border">
                   <iframe
-                    title="NutriTrax Casablanca"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d106376.72691458199!2d-7.6824!3d33.5731!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda7cd4778aa113b%3A0xb06c1d84f310fd3!2sCasablanca!5e0!3m2!1sfr!2sma!4v1709000000000"
+                    title="NutriTrax Localisation"
+                    src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3234.0768131933837!2d-5.355053!3d35.84712!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzXCsDUwJzQ5LjYiTiA1wrAyMScxOC4yIlc!5e0!3m2!1sfr!2sus!4v1774470630784!5m2!1sfr!2sus"
                     width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade" />
                 </div>
