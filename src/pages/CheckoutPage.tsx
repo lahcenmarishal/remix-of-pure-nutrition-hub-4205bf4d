@@ -16,7 +16,7 @@ const cities = [
 ];
 
 const CheckoutPage = () => {
-  const { items, subtotal, shippingCost, total, clearCart } = useCart();
+  const { items, subtotal, shippingCost, total, clearCart, freeShippingThreshold } = useCart();
   const navigate = useNavigate();
   const [submitted, setSubmitted] = useState(false);
 
