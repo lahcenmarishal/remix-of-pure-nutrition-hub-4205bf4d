@@ -360,7 +360,7 @@ const AdminProducts = () => {
                   </td>
                   <td className="p-3"><img src={p.image} alt="" className="w-12 h-12 object-cover rounded-lg" /></td>
                   <td className="p-3 text-foreground font-medium">{p.name}</td>
-                  <td className="p-3 text-muted-foreground font-mono text-xs hidden md:table-cell">{p.barcode || "—"}</td>
+                  <td className="p-3 text-muted-foreground font-mono text-xs hidden md:table-cell">PRD-{p.id.slice(0, 8).toUpperCase()}</td>
                   <td className="p-3 text-foreground hidden md:table-cell">{Number(p.price).toFixed(2)} DH</td>
                   <td className="p-3 hidden md:table-cell">
                     <div className="flex items-center gap-1">
