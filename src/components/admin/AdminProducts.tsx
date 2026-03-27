@@ -53,7 +53,7 @@ const AdminProducts = () => {
         image: p.image, images: p.images, category: p.category, badge: p.badge,
         promo_label: p.promo_label,
         short_description: p.short_description, description: p.description,
-        benefits: p.benefits, ingredients: p.ingredients, faq: p.faq,
+        benefits: p.benefits.filter(Boolean), ingredients: p.ingredients, faq: p.faq,
         is_active: p.is_active, rating: p.rating, reviews: p.reviews,
         shipping_price: p.shipping_price,
         expiration_date: p.expiration_date,
@@ -304,7 +304,7 @@ const AdminProducts = () => {
         </div>
         <div>
           <label className="block text-sm font-medium text-foreground mb-1">Bénéfices (un par ligne)</label>
-          <textarea value={form.benefits.join("\n")} onChange={e => setForm({ ...form, benefits: e.target.value.split("\n").filter(Boolean) })}
+          <textarea value={form.benefits.join("\n")} onChange={e => setForm({ ...form, benefits: e.target.value.split("\n") })}
             rows={3} className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
         </div>
         <div className="flex items-center gap-2">
@@ -335,7 +335,7 @@ const AdminProducts = () => {
                 <th className="text-left p-3 font-medium text-foreground w-10">Ordre</th>
                 <th className="text-left p-3 font-medium text-foreground">Image</th>
                 <th className="text-left p-3 font-medium text-foreground">Nom</th>
-                <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">SKU</th>
+                <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">SKU (auto)</th>
                 <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Prix</th>
                 <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Note</th>
                 <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Statut</th>
@@ -360,7 +360,7 @@ const AdminProducts = () => {
                   </td>
                   <td className="p-3"><img src={p.image} alt="" className="w-12 h-12 object-cover rounded-lg" /></td>
                   <td className="p-3 text-foreground font-medium">{p.name}</td>
-                  <td className="p-3 text-muted-foreground font-mono text-xs hidden md:table-cell">{p.barcode || "—"}</td>
+                  <td className="p-3 text-muted-foreground font-mono text-xs hidden md:table-cell">PRD-{p.id.slice(0, 8).toUpperCase()}</td>
                   <td className="p-3 text-foreground hidden md:table-cell">{Number(p.price).toFixed(2)} DH</td>
                   <td className="p-3 hidden md:table-cell">
                     <div className="flex items-center gap-1">
