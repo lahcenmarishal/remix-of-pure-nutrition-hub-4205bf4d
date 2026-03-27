@@ -304,7 +304,7 @@ const AdminProducts = () => {
         </div>
         <div>
           <label className="block text-sm font-medium text-foreground mb-1">Bénéfices (un par ligne)</label>
-          <textarea value={form.benefits.join("\n")} onChange={e => setForm({ ...form, benefits: e.target.value.split("\n").filter(Boolean) })}
+          <textarea value={form.benefits.join("\n")} onChange={e => setForm({ ...form, benefits: e.target.value.split("\n") })}
             rows={3} className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
         </div>
         <div className="flex items-center gap-2">
