@@ -101,8 +101,9 @@ const ProductPage = () => {
               </div>
               <p className="text-muted-foreground leading-relaxed mb-8">{product.description}</p>
 
+              <p className="text-xs text-muted-foreground mb-4">SKU : <span className="font-mono text-foreground">PRD-{product.id.slice(0, 8).toUpperCase()}</span></p>
               {product.barcode && (
-                <p className="text-xs text-muted-foreground mb-4">SKU : <span className="font-mono text-foreground">{product.barcode}</span></p>
+                <p className="text-xs text-muted-foreground mb-2">Code-barres : <span className="font-mono text-foreground">{product.barcode}</span></p>
               )}
 
               <div className="mb-8">

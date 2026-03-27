@@ -335,7 +335,7 @@ const AdminProducts = () => {
                 <th className="text-left p-3 font-medium text-foreground w-10">Ordre</th>
                 <th className="text-left p-3 font-medium text-foreground">Image</th>
                 <th className="text-left p-3 font-medium text-foreground">Nom</th>
-                <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">SKU</th>
+                <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">SKU (auto)</th>
                 <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Prix</th>
                 <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Note</th>
                 <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Statut</th>
