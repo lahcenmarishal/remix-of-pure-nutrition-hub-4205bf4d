@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { ChevronRight, Truck, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,21 +9,31 @@ import { toast } from "@/hooks/use-toast";
 
 const CUSTOMER_KEY = "nutritrax_customer";
 
-const cities = [
+const moroccanCities = [
   "Casablanca", "Rabat", "Marrakech", "Fès", "Tanger", "Agadir", "Meknès",
   "Oujda", "Kénitra", "Tétouan", "Salé", "Nador", "Mohammedia", "El Jadida",
   "Béni Mellal", "Taza", "Khouribga", "Settat", "Laâyoune", "Dakhla",
+  "Safi", "Errachidia", "Guelmim", "Khémisset", "Berkane", "Taourirt",
+  "Larache", "Ouarzazate", "Ifrane", "Azrou", "Tan-Tan", "Tiznit",
+  "Essaouira", "Al Hoceima", "Chefchaouen", "Midelt", "Sidi Kacem",
+  "Sidi Slimane", "Ben Guerir", "Youssoufia", "Fquih Ben Salah",
 ];
 
 const CheckoutPage = () => {
   const { items, subtotal, shippingCost, total, clearCart, freeShippingThreshold } = useCart();
-  const navigate = useNavigate();
   const [submitted, setSubmitted] = useState(false);
+  const [cityQuery, setCityQuery] = useState("");
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
 
   const [form, setForm] = useState(() => {
     try {
       const saved = localStorage.getItem(CUSTOMER_KEY);
-      if (saved) return { ...JSON.parse(saved) };
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Remove zip if it was saved before
+        const { zip, ...rest } = parsed;
+        return rest;
+      }
     } catch {}
     return {
       firstName: "",
@@ -31,17 +41,35 @@ const CheckoutPage = () => {
       phone: "",
       email: "",
       address: "",
-      city: "Casablanca",
-      zip: "",
+      city: "",
     };
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const updated = { ...form, [e.target.name]: e.target.value };
     setForm(updated);
-    // Save customer info for pre-fill next time
     localStorage.setItem(CUSTOMER_KEY, JSON.stringify(updated));
   };
+
+  const handleCitySelect = (city: string) => {
+    const updated = { ...form, city };
+    setForm(updated);
+    setCityQuery(city);
+    setShowCityDropdown(false);
+    localStorage.setItem(CUSTOMER_KEY, JSON.stringify(updated));
+  };
+
+  const handleCityInput = (value: string) => {
+    setCityQuery(value);
+    setShowCityDropdown(true);
+    const updated = { ...form, city: value };
+    setForm(updated);
+    localStorage.setItem(CUSTOMER_KEY, JSON.stringify(updated));
+  };
+
+  const filteredCities = moroccanCities.filter(c =>
+    c.toLowerCase().includes(cityQuery.toLowerCase())
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +87,7 @@ const CheckoutPage = () => {
       customer_name: `${form.firstName} ${form.lastName}`,
       customer_email: form.email || "",
       customer_phone: form.phone,
-      shipping_address: `${form.address}, ${form.city} ${form.zip}`,
+      shipping_address: `${form.address}, ${form.city}`,
       items: orderItems,
       subtotal: subtotal,
       shipping: shippingCost,
@@ -134,7 +162,6 @@ const CheckoutPage = () => {
       <Header />
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-4">
-          {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
             <Link to="/" className="hover:text-foreground transition-colors">Accueil</Link>
             <ChevronRight className="w-3 h-3" />
@@ -146,7 +173,6 @@ const CheckoutPage = () => {
           </h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Form */}
             <form onSubmit={handleSubmit} className="lg:col-span-2 space-y-6">
               <div className="bg-card border border-border rounded-xl p-6">
                 <h2 className="font-display text-xl font-semibold text-foreground mb-5">
@@ -156,91 +182,58 @@ const CheckoutPage = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-1.5">Prénom *</label>
-                    <input
-                      type="text"
-                      name="firstName"
-                      required
-                      value={form.firstName}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-sm"
-                    />
+                    <input type="text" name="firstName" required value={form.firstName} onChange={handleChange}
+                      className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-sm" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-1.5">Nom *</label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      required
-                      value={form.lastName}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-sm"
-                    />
+                    <input type="text" name="lastName" required value={form.lastName} onChange={handleChange}
+                      className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-sm" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-1.5">Téléphone *</label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      required
-                      placeholder="06XXXXXXXX"
-                      value={form.phone}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-sm"
-                    />
+                    <input type="tel" name="phone" required placeholder="06XXXXXXXX" value={form.phone} onChange={handleChange}
+                      className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-sm" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-1.5">Email</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-sm"
-                    />
+                    <label className="block text-sm font-medium text-foreground mb-1.5">Email <span className="text-muted-foreground font-normal">(optionnel)</span></label>
+                    <input type="email" name="email" value={form.email} onChange={handleChange}
+                      className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-sm" />
                   </div>
                 </div>
 
                 <div className="mt-4">
                   <label className="block text-sm font-medium text-foreground mb-1.5">Adresse complète *</label>
-                  <input
-                    type="text"
-                    name="address"
-                    required
-                    value={form.address}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-sm"
-                  />
+                  <input type="text" name="address" required value={form.address} onChange={handleChange}
+                    className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-sm" />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-1.5">Ville *</label>
-                    <select
-                      name="city"
-                      required
-                      value={form.city}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-sm"
-                    >
-                      {cities.map((c) => (
-                        <option key={c} value={c}>{c}</option>
+                <div className="mt-4 relative">
+                  <label className="block text-sm font-medium text-foreground mb-1.5">Ville *</label>
+                  <input
+                    type="text"
+                    required
+                    value={cityQuery || form.city}
+                    onChange={e => handleCityInput(e.target.value)}
+                    onFocus={() => setShowCityDropdown(true)}
+                    onBlur={() => setTimeout(() => setShowCityDropdown(false), 200)}
+                    placeholder="Tapez pour rechercher une ville..."
+                    className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-sm"
+                  />
+                  {showCityDropdown && filteredCities.length > 0 && (
+                    <div className="absolute z-20 w-full mt-1 bg-card border border-border rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                      {filteredCities.map(city => (
+                        <button key={city} type="button"
+                          onMouseDown={() => handleCitySelect(city)}
+                          className="w-full text-left px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors">
+                          {city}
+                        </button>
                       ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-1.5">Code postal</label>
-                    <input
-                      type="text"
-                      name="zip"
-                      value={form.zip}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-sm"
-                    />
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* Payment method */}
               <div className="bg-card border border-border rounded-xl p-6">
                 <h2 className="font-display text-xl font-semibold text-foreground mb-4">
                   Mode de paiement
@@ -254,29 +247,19 @@ const CheckoutPage = () => {
                 </div>
               </div>
 
-              <button
-                type="submit"
-                className="w-full px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity text-sm uppercase tracking-wider"
-              >
+              <button type="submit"
+                className="w-full px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity text-sm uppercase tracking-wider">
                 Confirmer ma commande — {total.toFixed(2)} DH
               </button>
             </form>
 
-            {/* Order summary */}
             <div className="lg:col-span-1">
               <div className="bg-card border border-border rounded-xl p-6 sticky top-28">
-                <h2 className="font-display text-xl font-semibold text-foreground mb-5">
-                  Récapitulatif
-                </h2>
-
+                <h2 className="font-display text-xl font-semibold text-foreground mb-5">Récapitulatif</h2>
                 <div className="space-y-4 mb-6">
                   {items.map((item) => (
                     <div key={item.product.id} className="flex gap-3">
-                      <img
-                        src={item.product.image}
-                        alt={item.product.name}
-                        className="w-14 h-14 object-cover rounded-lg flex-shrink-0"
-                      />
+                      <img src={item.product.image} alt={item.product.name} className="w-14 h-14 object-cover rounded-lg flex-shrink-0" />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-foreground truncate">{item.product.name}</p>
                         <p className="text-xs text-muted-foreground">Qté : {item.quantity}</p>
@@ -287,39 +270,29 @@ const CheckoutPage = () => {
                     </div>
                   ))}
                 </div>
-
                 <div className="space-y-2 pt-4 border-t border-border">
                   <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>Sous-total</span>
-                    <span>{subtotal.toFixed(2)} DH</span>
+                    <span>Sous-total</span><span>{subtotal.toFixed(2)} DH</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground flex items-center gap-1">
-                      <Truck className="w-3.5 h-3.5" /> Livraison
-                    </span>
+                    <span className="text-muted-foreground flex items-center gap-1"><Truck className="w-3.5 h-3.5" /> Livraison</span>
                     <span className={shippingCost === 0 ? "text-green-600 font-medium" : "text-foreground"}>
                       {shippingCost === 0 ? "Gratuite" : `${shippingCost.toFixed(2)} DH`}
                     </span>
                   </div>
                   {shippingCost > 0 && (
-                    <p className="text-xs text-muted-foreground">
-                      Livraison gratuite dès {freeShippingThreshold} DH d'achat
-                    </p>
+                    <p className="text-xs text-muted-foreground">Livraison gratuite dès {freeShippingThreshold} DH d'achat</p>
                   )}
                   <div className="flex justify-between text-lg font-bold text-foreground pt-3 border-t border-border">
-                    <span>Total</span>
-                    <span>{total.toFixed(2)} DH</span>
+                    <span>Total</span><span>{total.toFixed(2)} DH</span>
                   </div>
                 </div>
-
                 <div className="mt-6 space-y-2">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Truck className="w-4 h-4 text-primary" />
-                    <span>Livraison partout au Maroc (2-5 jours)</span>
+                    <Truck className="w-4 h-4 text-primary" /><span>Livraison partout au Maroc (2-5 jours)</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <ShieldCheck className="w-4 h-4 text-primary" />
-                    <span>Paiement sécurisé à la livraison</span>
+                    <ShieldCheck className="w-4 h-4 text-primary" /><span>Paiement sécurisé à la livraison</span>
                   </div>
                 </div>
               </div>

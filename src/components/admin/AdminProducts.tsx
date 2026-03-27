@@ -335,6 +335,7 @@ const AdminProducts = () => {
                 <th className="text-left p-3 font-medium text-foreground w-10">Ordre</th>
                 <th className="text-left p-3 font-medium text-foreground">Image</th>
                 <th className="text-left p-3 font-medium text-foreground">Nom</th>
+                <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">SKU</th>
                 <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Prix</th>
                 <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Note</th>
                 <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Statut</th>
@@ -359,6 +360,7 @@ const AdminProducts = () => {
                   </td>
                   <td className="p-3"><img src={p.image} alt="" className="w-12 h-12 object-cover rounded-lg" /></td>
                   <td className="p-3 text-foreground font-medium">{p.name}</td>
+                  <td className="p-3 text-muted-foreground font-mono text-xs hidden md:table-cell">{p.barcode || "—"}</td>
                   <td className="p-3 text-foreground hidden md:table-cell">{Number(p.price).toFixed(2)} DH</td>
                   <td className="p-3 hidden md:table-cell">
                     <div className="flex items-center gap-1">

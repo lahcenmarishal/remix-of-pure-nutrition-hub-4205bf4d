@@ -101,6 +101,10 @@ const ProductPage = () => {
               </div>
               <p className="text-muted-foreground leading-relaxed mb-8">{product.description}</p>
 
+              {product.barcode && (
+                <p className="text-xs text-muted-foreground mb-4">SKU : <span className="font-mono text-foreground">{product.barcode}</span></p>
+              )}
+
               <div className="mb-8">
                 <h3 className="font-display font-semibold text-foreground mb-3">Bénéfices</h3>
                 <ul className="space-y-2">
