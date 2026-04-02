@@ -4,6 +4,14 @@ import { toast } from "@/hooks/use-toast";
 import { Eye, ShoppingBag, DollarSign, Clock, CheckCircle, XCircle } from "lucide-react";
 import { useState, useMemo } from "react";
 
+const getSku = (item: any, productsBySlug: Record<string, string>) => {
+  if (item?.sku) return item.sku;
+  if (item?.id) return `PRD-${String(item.id).slice(0, 8).toUpperCase()}`;
+  if (item?.product?.id) return `PRD-${String(item.product.id).slice(0, 8).toUpperCase()}`;
+  if (item?.slug && productsBySlug[item.slug]) return productsBySlug[item.slug];
+  return "—";
+};
+
 const statusLabels: Record<string, string> = {
   pending: "En attente",
   confirmed: "Confirmée",
@@ -46,6 +54,20 @@ const AdminOrders = () => {
       return data;
     },
   });
+
+  const { data: products = [] } = useQuery({
+    queryKey: ["admin-order-products-sku"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("products").select("id, slug");
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const productsBySlug = useMemo(
+    () => Object.fromEntries(products.map((p: any) => [p.slug, `PRD-${p.id.slice(0, 8).toUpperCase()}`])),
+    [products]
+  );
 
   const stats = useMemo(() => {
     const revenue = orders.filter((o: any) => o.status !== "cancelled").reduce((s: number, o: any) => s + Number(o.total), 0);
@@ -101,6 +123,7 @@ const AdminOrders = () => {
           <table className="w-full text-sm">
             <thead><tr className="bg-muted/50">
               <th className="text-left p-3 font-medium">Produit</th>
+              <th className="text-left p-3 font-medium">SKU</th>
               <th className="text-left p-3 font-medium">Qté</th>
               <th className="text-right p-3 font-medium">Prix</th>
             </tr></thead>
@@ -108,6 +131,7 @@ const AdminOrders = () => {
               {items.map((item: any, i: number) => (
                 <tr key={i} className="border-t border-border">
                   <td className="p-3 text-foreground">{item.name || item.product?.name || "Produit"}</td>
+                  <td className="p-3 text-muted-foreground font-mono text-xs">{getSku(item, productsBySlug)}</td>
                   <td className="p-3 text-foreground">{item.quantity}</td>
                   <td className="p-3 text-right text-foreground">{(Number(item.price || 0) * item.quantity).toFixed(2)} DH</td>
                 </tr>

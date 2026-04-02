@@ -11,9 +11,9 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           <div>
-            <img src={logo} alt="NutriTrax" className="h-14 w-auto mb-4" />
+            <img src={logo} alt="DimaSportif" className="h-14 w-auto mb-4" />
             <p className="text-sm text-background/60 leading-relaxed">
-              NutriTrax Nutrition — L'excellence en nutrition sportive depuis 2020.
+              DimaSportif — Équipements sportifs et compléments alimentaires.
             </p>
             {/* Social links */}
             {settings && (
@@ -81,7 +81,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="border-t border-background/10 pt-8 text-center text-xs text-background/40">
-          © 2026 NutriTrax Nutrition. Tous droits réservés.
+          © 2026 DimaSportif. Tous droits réservés.
         </div>
       </div>
     </footer>
