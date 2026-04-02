@@ -76,8 +76,10 @@ const CheckoutPage = () => {
     if (items.length === 0) return;
 
     const orderItems = items.map(i => ({
+      id: i.product.id,
       name: i.product.name,
       slug: i.product.slug,
+      sku: `PRD-${i.product.id.slice(0, 8).toUpperCase()}`,
       price: i.product.price,
       quantity: i.quantity,
       image: i.product.image,

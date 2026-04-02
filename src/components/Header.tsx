@@ -77,7 +77,7 @@ const Header = () => {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link to="/" className="flex-shrink-0">
-            <img src={logo} alt="NutriTrax Nutrition" className="h-24 w-auto drop-shadow-lg" />
+            <img src={logo} alt="DimaSportif" className="h-24 w-auto drop-shadow-lg" />
           </Link>
 
           {/* Desktop Nav */}
