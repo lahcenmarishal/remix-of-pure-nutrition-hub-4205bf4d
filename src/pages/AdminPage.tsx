@@ -39,7 +39,7 @@ const AdminPage = () => {
       {/* Sidebar */}
       <div className="fixed left-0 top-0 bottom-0 w-60 bg-card border-r border-border hidden lg:flex flex-col">
         <div className="p-6 border-b border-border">
-          <h1 className="font-display text-lg font-bold text-foreground">NutriTrax Admin</h1>
+          <h1 className="font-display text-lg font-bold text-foreground">DimaSportif Admin</h1>
           <p className="text-xs text-muted-foreground mt-0.5">{user.email}</p>
         </div>
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
