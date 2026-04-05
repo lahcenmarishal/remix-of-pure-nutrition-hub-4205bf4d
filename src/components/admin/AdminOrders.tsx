@@ -222,7 +222,10 @@ const AdminOrders = () => {
                   </td>
                   <td className="p-3 text-muted-foreground hidden md:table-cell text-xs">{new Date(o.created_at).toLocaleDateString("fr-FR")}</td>
                   <td className="p-3 text-right">
-                    <button onClick={() => setDetail(o)} className="p-1.5 text-muted-foreground hover:text-foreground"><Eye className="w-4 h-4" /></button>
+                    <div className="flex items-center justify-end gap-1">
+                      <button onClick={() => setDetail(o)} className="p-1.5 text-muted-foreground hover:text-foreground"><Eye className="w-4 h-4" /></button>
+                      <button onClick={() => { if (confirm("Supprimer cette commande ?")) deleteOrder.mutate(o.id); }} className="p-1.5 text-muted-foreground hover:text-destructive"><Trash2 className="w-4 h-4" /></button>
+                    </div>
                   </td>
                 </tr>
               ))}
