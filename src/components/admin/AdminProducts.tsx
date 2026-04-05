@@ -55,7 +55,7 @@ const AdminProducts = () => {
         promo_label: p.promo_label,
         short_description: p.short_description, description: p.description,
         benefits: p.benefits.filter(Boolean), ingredients: p.ingredients, faq: p.faq,
-        is_active: p.is_active, rating: p.rating, reviews: p.reviews,
+        is_active: p.is_active, is_in_stock: p.is_in_stock, rating: p.rating, reviews: p.reviews,
         shipping_price: p.shipping_price,
         expiration_date: p.expiration_date,
         barcode: p.barcode || null,
