@@ -36,6 +36,7 @@ export function useProducts() {
         barcode: p.barcode || null,
         sortOrder: p.sort_order ?? 0,
         images: p.images || [],
+        isInStock: p.is_in_stock !== false,
       }));
     },
   });

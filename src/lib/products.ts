@@ -19,6 +19,7 @@ export interface Product {
   faq: { question: string; answer: string }[];
   barcode?: string | null;
   sortOrder?: number;
+  isInStock?: boolean;
 }
 
 export const products: Product[] = [

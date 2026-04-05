@@ -17,7 +17,7 @@ const emptyProduct = {
   promo_label: null as string | null,
   short_description: "", description: "",
   benefits: [] as string[], ingredients: [] as any[], faq: [] as any[],
-  is_active: true, rating: 0, reviews: 0,
+  is_active: true, is_in_stock: true, rating: 0, reviews: 0,
   shipping_price: null as number | null,
   expiration_date: null as string | null,
   barcode: null as string | null,
@@ -120,7 +120,8 @@ const AdminProducts = () => {
       promo_label: p.promo_label || null,
       short_description: p.short_description || "", description: p.description || "",
       benefits: p.benefits || [], ingredients: p.ingredients || [], faq: p.faq || [],
-      is_active: p.is_active, rating: Number(p.rating), reviews: p.reviews,
+      is_active: p.is_active, is_in_stock: p.is_in_stock !== false,
+      rating: Number(p.rating), reviews: p.reviews,
       shipping_price: p.shipping_price != null ? Number(p.shipping_price) : null,
       expiration_date: p.expiration_date || null,
       barcode: p.barcode || null,
@@ -308,9 +309,15 @@ const AdminProducts = () => {
           <textarea value={form.benefits.join("\n")} onChange={e => setForm({ ...form, benefits: e.target.value.split("\n") })}
             rows={3} className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm" />
         </div>
-        <div className="flex items-center gap-2">
-          <input type="checkbox" checked={form.is_active} onChange={e => setForm({ ...form, is_active: e.target.checked })} />
-          <label className="text-sm text-foreground">Actif</label>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <input type="checkbox" checked={form.is_active} onChange={e => setForm({ ...form, is_active: e.target.checked })} />
+            <label className="text-sm text-foreground">Actif</label>
+          </div>
+          <div className="flex items-center gap-2">
+            <input type="checkbox" checked={form.is_in_stock} onChange={e => setForm({ ...form, is_in_stock: e.target.checked })} />
+            <label className="text-sm text-foreground">En stock</label>
+          </div>
         </div>
         <button onClick={() => save.mutate({ ...form, id: editing.id })} disabled={save.isPending}
           className="px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity text-sm">
@@ -347,6 +354,7 @@ const AdminProducts = () => {
                 <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">SKU (auto)</th>
                 <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Prix</th>
                 <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Note</th>
+                <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Stock</th>
                 <th className="text-left p-3 font-medium text-foreground hidden md:table-cell">Statut</th>
                 <th className="text-right p-3 font-medium text-foreground">Actions</th>
               </tr>
@@ -376,6 +384,11 @@ const AdminProducts = () => {
                       <Star className="w-3.5 h-3.5 fill-accent text-accent" />
                       <span className="text-foreground text-xs">{Number(p.rating).toFixed(1)} ({p.reviews})</span>
                     </div>
+                  </td>
+                  <td className="p-3 hidden md:table-cell">
+                    <span className={`text-xs px-2 py-1 rounded-full ${p.is_in_stock !== false ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"}`}>
+                      {p.is_in_stock !== false ? "En stock" : "Rupture"}
+                    </span>
                   </td>
                   <td className="p-3 hidden md:table-cell">
                     <span className={`text-xs px-2 py-1 rounded-full ${p.is_active ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
