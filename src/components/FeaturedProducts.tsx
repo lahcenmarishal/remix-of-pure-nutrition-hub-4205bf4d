@@ -10,8 +10,13 @@ const ProductCard = ({ product }: { product: Product }) => (
     className="group block bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300"
   >
     <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-      <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-      {(product.badge || product.promoLabel) && (
+      <img src={product.image} alt={product.name} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${product.isInStock === false ? "opacity-50" : ""}`} loading="lazy" />
+      {product.isInStock === false && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="bg-destructive text-destructive-foreground text-xs font-bold uppercase px-3 py-1.5 rounded-full">Rupture de stock</span>
+        </div>
+      )}
+      {product.isInStock !== false && (product.badge || product.promoLabel) && (
         <div className="absolute top-3 left-3 flex flex-col gap-1">
           {product.badge && (
             <span className={product.badge === "new" ? "badge-new" : "badge-bestseller"}>

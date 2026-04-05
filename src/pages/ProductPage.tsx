@@ -117,19 +117,25 @@ const ProductPage = () => {
                 </ul>
               </div>
 
-              <div className="flex items-center gap-4 mb-8">
-                <div className="flex items-center border border-border rounded-lg">
-                  <button onClick={() => setQty(Math.max(1, qty - 1))} className="p-3 hover:bg-muted transition-colors"><Minus className="w-4 h-4" /></button>
-                  <span className="w-12 text-center font-medium">{qty}</span>
-                  <button onClick={() => setQty(qty + 1)} className="p-3 hover:bg-muted transition-colors"><Plus className="w-4 h-4" /></button>
+              {product.isInStock === false ? (
+                <div className="mb-8 px-4 py-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+                  <p className="text-destructive font-semibold text-sm">⚠ Ce produit est actuellement en rupture de stock</p>
                 </div>
-                <button
-                  onClick={() => { addToCart(product, qty); setQty(1); }}
-                  className="flex-1 flex items-center justify-center gap-2 px-8 py-3.5 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity text-sm uppercase tracking-wider"
-                >
-                  <ShoppingCart className="w-4 h-4" /> Ajouter au panier
-                </button>
-              </div>
+              ) : (
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="flex items-center border border-border rounded-lg">
+                    <button onClick={() => setQty(Math.max(1, qty - 1))} className="p-3 hover:bg-muted transition-colors"><Minus className="w-4 h-4" /></button>
+                    <span className="w-12 text-center font-medium">{qty}</span>
+                    <button onClick={() => setQty(qty + 1)} className="p-3 hover:bg-muted transition-colors"><Plus className="w-4 h-4" /></button>
+                  </div>
+                  <button
+                    onClick={() => { addToCart(product, qty); setQty(1); }}
+                    className="flex-1 flex items-center justify-center gap-2 px-8 py-3.5 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity text-sm uppercase tracking-wider"
+                  >
+                    <ShoppingCart className="w-4 h-4" /> Ajouter au panier
+                  </button>
+                </div>
+              )}
 
               {product.ingredients.length > 0 && (
                 <div className="mb-8">
