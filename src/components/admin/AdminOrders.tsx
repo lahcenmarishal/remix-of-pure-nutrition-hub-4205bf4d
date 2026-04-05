@@ -113,7 +113,13 @@ const AdminOrders = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-display text-xl font-bold text-foreground">Commande #{detail.id.slice(0, 8)}</h2>
-          <button onClick={() => setDetail(null)} className="text-sm text-muted-foreground hover:text-foreground">Retour</button>
+          <div className="flex items-center gap-3">
+            <button onClick={() => { if (confirm("Supprimer cette commande ?")) deleteOrder.mutate(detail.id); }}
+              className="text-sm text-destructive hover:text-destructive/80 flex items-center gap-1">
+              <Trash2 className="w-4 h-4" /> Supprimer
+            </button>
+            <button onClick={() => setDetail(null)} className="text-sm text-muted-foreground hover:text-foreground">Retour</button>
+          </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-muted/30 border border-border rounded-xl p-5 space-y-2">
@@ -141,20 +147,27 @@ const AdminOrders = () => {
         <div className="border border-border rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead><tr className="bg-muted/50">
+              <th className="text-left p-3 font-medium w-14">Image</th>
               <th className="text-left p-3 font-medium">Produit</th>
               <th className="text-left p-3 font-medium">SKU</th>
               <th className="text-left p-3 font-medium">Qté</th>
               <th className="text-right p-3 font-medium">Prix</th>
             </tr></thead>
             <tbody>
-              {items.map((item: any, i: number) => (
-                <tr key={i} className="border-t border-border">
-                  <td className="p-3 text-foreground">{item.name || item.product?.name || "Produit"}</td>
-                  <td className="p-3 text-muted-foreground font-mono text-xs">{getSku(item, productsBySlug)}</td>
-                  <td className="p-3 text-foreground">{item.quantity}</td>
-                  <td className="p-3 text-right text-foreground">{(Number(item.price || 0) * item.quantity).toFixed(2)} DH</td>
-                </tr>
-              ))}
+              {items.map((item: any, i: number) => {
+                const img = getItemImage(item, productsBySlug);
+                return (
+                  <tr key={i} className="border-t border-border">
+                    <td className="p-3">
+                      {img ? <img src={img} alt="" className="w-10 h-10 object-cover rounded" /> : <div className="w-10 h-10 bg-muted rounded" />}
+                    </td>
+                    <td className="p-3 text-foreground">{item.name || item.product?.name || "Produit"}</td>
+                    <td className="p-3 text-muted-foreground font-mono text-xs">{getSku(item, productsBySlug)}</td>
+                    <td className="p-3 text-foreground">{item.quantity}</td>
+                    <td className="p-3 text-right text-foreground">{(Number(item.price || 0) * item.quantity).toFixed(2)} DH</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
