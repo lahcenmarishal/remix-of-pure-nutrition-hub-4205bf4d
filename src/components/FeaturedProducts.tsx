@@ -9,7 +9,7 @@ const ProductCard = ({ product }: { product: Product }) => (
     to={`/produit/${product.slug}`}
     className="group block bg-card rounded-xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300"
   >
-    <div className="relative aspect-square overflow-hidden bg-muted">
+    <div className="relative aspect-[4/3] overflow-hidden bg-muted">
       <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
       {(product.badge || product.promoLabel) && (
         <div className="absolute top-3 left-3 flex flex-col gap-1">

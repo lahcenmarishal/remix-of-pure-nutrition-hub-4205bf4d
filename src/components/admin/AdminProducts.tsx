@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useCategories } from "@/hooks/useProducts";
 import { toast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2, GripVertical, ChevronUp, ChevronDown, Star, Upload, X } from "lucide-react";
+import { Plus, Pencil, Trash2, GripVertical, ChevronUp, ChevronDown, Star, Upload, X, Search } from "lucide-react";
 import ImageUpload from "./ImageUpload";
 import { uploadImage } from "@/lib/uploadImage";
 
@@ -30,6 +30,7 @@ const AdminProducts = () => {
   const [form, setForm] = useState({ ...emptyProduct });
   const [catQuery, setCatQuery] = useState("");
   const [showCatDropdown, setShowCatDropdown] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [galleryUploading, setGalleryUploading] = useState(false);
   const galleryRef = useRef<HTMLInputElement>(null);
   const { data: categories = [] } = useCategories();
@@ -321,11 +322,19 @@ const AdminProducts = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <h2 className="font-display text-xl font-bold text-foreground">Produits ({products.length})</h2>
-        <button onClick={startNew} className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90">
-          <Plus className="w-4 h-4" /> Ajouter
-        </button>
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Rechercher..."
+              className="pl-9 pr-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm w-48" />
+          </div>
+          <button onClick={startNew} className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90">
+            <Plus className="w-4 h-4" /> Ajouter
+          </button>
+        </div>
       </div>
       {isLoading ? <p className="text-muted-foreground">Chargement...</p> : (
         <div className="border border-border rounded-xl overflow-hidden">
@@ -343,7 +352,7 @@ const AdminProducts = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((p: any, idx: number) => (
+              {products.filter((p: any) => !searchQuery.trim() || p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.slug.toLowerCase().includes(searchQuery.toLowerCase())).map((p: any, idx: number) => (
                 <tr key={p.id} className="border-t border-border">
                   <td className="p-2">
                     <div className="flex flex-col items-center gap-0.5">
