@@ -140,6 +140,7 @@ export type Database = {
           images: string[] | null
           ingredients: Json | null
           is_active: boolean | null
+          is_in_stock: boolean
           name: string
           original_price: number | null
           price: number
@@ -166,6 +167,7 @@ export type Database = {
           images?: string[] | null
           ingredients?: Json | null
           is_active?: boolean | null
+          is_in_stock?: boolean
           name: string
           original_price?: number | null
           price: number
@@ -192,6 +194,7 @@ export type Database = {
           images?: string[] | null
           ingredients?: Json | null
           is_active?: boolean | null
+          is_in_stock?: boolean
           name?: string
           original_price?: number | null
           price?: number
