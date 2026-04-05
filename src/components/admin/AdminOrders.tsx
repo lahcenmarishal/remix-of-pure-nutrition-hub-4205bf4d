@@ -4,12 +4,19 @@ import { toast } from "@/hooks/use-toast";
 import { Eye, ShoppingBag, DollarSign, Clock, CheckCircle, XCircle, Trash2 } from "lucide-react";
 import { useState, useMemo } from "react";
 
-const getSku = (item: any, productsBySlug: Record<string, string>) => {
+const getSku = (item: any, productsBySlug: Record<string, { sku: string; image: string }>) => {
   if (item?.sku) return item.sku;
   if (item?.id) return `PRD-${String(item.id).slice(0, 8).toUpperCase()}`;
   if (item?.product?.id) return `PRD-${String(item.product.id).slice(0, 8).toUpperCase()}`;
-  if (item?.slug && productsBySlug[item.slug]) return productsBySlug[item.slug];
+  if (item?.slug && productsBySlug[item.slug]) return productsBySlug[item.slug].sku;
   return "—";
+};
+
+const getItemImage = (item: any, productsBySlug: Record<string, { sku: string; image: string }>) => {
+  if (item?.image) return item.image;
+  if (item?.product?.image) return item.product.image;
+  if (item?.slug && productsBySlug[item.slug]) return productsBySlug[item.slug].image;
+  return null;
 };
 
 const statusLabels: Record<string, string> = {
