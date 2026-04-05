@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { Eye, ShoppingBag, DollarSign, Clock, CheckCircle, XCircle } from "lucide-react";
+import { Eye, ShoppingBag, DollarSign, Clock, CheckCircle, XCircle, Trash2 } from "lucide-react";
 import { useState, useMemo } from "react";
 
 const getSku = (item: any, productsBySlug: Record<string, string>) => {
@@ -58,14 +58,14 @@ const AdminOrders = () => {
   const { data: products = [] } = useQuery({
     queryKey: ["admin-order-products-sku"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("products").select("id, slug");
+      const { data, error } = await supabase.from("products").select("id, slug, image");
       if (error) throw error;
       return data;
     },
   });
 
   const productsBySlug = useMemo(
-    () => Object.fromEntries(products.map((p: any) => [p.slug, `PRD-${p.id.slice(0, 8).toUpperCase()}`])),
+    () => Object.fromEntries(products.map((p: any) => [p.slug, { sku: `PRD-${p.id.slice(0, 8).toUpperCase()}`, image: p.image }])),
     [products]
   );
 
