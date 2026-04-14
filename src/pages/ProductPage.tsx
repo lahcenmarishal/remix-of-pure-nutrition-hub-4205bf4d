@@ -1,9 +1,10 @@
 import { useParams, Link } from "react-router-dom";
 import { Star, ShoppingCart, ChevronRight, Plus, Minus } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useProducts } from "@/hooks/useProducts";
 import { ProductCard } from "@/components/FeaturedProducts";
 import { useCart } from "@/contexts/CartContext";
+import { trackViewContent, trackAddToCart } from "@/lib/fbPixel";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -38,6 +39,13 @@ const ProductPage = () => {
       </div>
     );
   }
+
+  // Facebook Pixel: ViewContent
+  useEffect(() => {
+    if (product) {
+      trackViewContent({ id: product.id, name: product.name, price: product.price, category: product.category });
+    }
+  }, [product?.id]);
 
   const allImages = [product.image, ...(product.images || [])].filter(Boolean);
   const related = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 3);
@@ -129,7 +137,11 @@ const ProductPage = () => {
                     <button onClick={() => setQty(qty + 1)} className="p-3 hover:bg-muted transition-colors"><Plus className="w-4 h-4" /></button>
                   </div>
                   <button
-                    onClick={() => { addToCart(product, qty); setQty(1); }}
+                    onClick={() => {
+                      trackAddToCart({ id: product.id, name: product.name, price: product.price, quantity: qty });
+                      addToCart(product, qty);
+                      setQty(1);
+                    }}
                     className="flex-1 flex items-center justify-center gap-2 px-8 py-3.5 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity text-sm uppercase tracking-wider"
                   >
                     <ShoppingCart className="w-4 h-4" /> Ajouter au panier
