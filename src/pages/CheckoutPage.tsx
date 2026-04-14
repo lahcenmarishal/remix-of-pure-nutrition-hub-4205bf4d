@@ -21,10 +21,17 @@ const moroccanCities = [
 ];
 
 const CheckoutPage = () => {
-  const { items, subtotal, shippingCost, total, clearCart, freeShippingThreshold } = useCart();
+  const { items, subtotal, shippingCost, total, clearCart, freeShippingThreshold, totalItems } = useCart();
   const [submitted, setSubmitted] = useState(false);
   const [cityQuery, setCityQuery] = useState("");
   const [showCityDropdown, setShowCityDropdown] = useState(false);
+
+  // Facebook Pixel: InitiateCheckout
+  useEffect(() => {
+    if (items.length > 0) {
+      trackInitiateCheckout({ value: total, numItems: totalItems });
+    }
+  }, []);
 
   const [form, setForm] = useState(() => {
     try {
@@ -101,6 +108,12 @@ const CheckoutPage = () => {
       toast({ title: "Erreur", description: "Impossible de passer la commande.", variant: "destructive" });
       return;
     }
+
+    // Facebook Pixel: Purchase
+    trackPurchase({
+      value: total,
+      items: items.map(i => ({ id: i.product.id, quantity: i.quantity })),
+    });
 
     setSubmitted(true);
     clearCart();
