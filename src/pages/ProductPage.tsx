@@ -17,6 +17,13 @@ const ProductPage = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const { addToCart } = useCart();
 
+  // Facebook Pixel: ViewContent
+  useEffect(() => {
+    if (product) {
+      trackViewContent({ id: product.id, name: product.name, price: product.price, category: product.category });
+    }
+  }, [product?.id]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
@@ -39,13 +46,6 @@ const ProductPage = () => {
       </div>
     );
   }
-
-  // Facebook Pixel: ViewContent
-  useEffect(() => {
-    if (product) {
-      trackViewContent({ id: product.id, name: product.name, price: product.price, category: product.category });
-    }
-  }, [product?.id]);
 
   const allImages = [product.image, ...(product.images || [])].filter(Boolean);
   const related = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 3);
